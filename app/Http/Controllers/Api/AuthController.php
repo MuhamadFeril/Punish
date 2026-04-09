@@ -22,9 +22,16 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            $credentials = $request->only('name', 'email', 'password');
-        $user = $this->authHandler->register($credentials);          
-  return ResponsHelper::success($user, 'Registration successful');
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6',
+            ]);
+
+            $user = $this->authHandler->register($validated);
+            return ResponsHelper::success($user, 'Registration successful');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponsHelper::error($e->errors(), 422);
         } catch (\Exception $e) {
             Log::error('Registration error: ' . $e->getMessage());
             return ResponsHelper::error('Registration failed: ' . $e->getMessage(), 500);
@@ -34,12 +41,19 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            $credentials = $request->only('email', 'password');
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ]);
+
             $token = $this->authHandler->login($credentials);
             if (!$token) {
                 return ResponsHelper::error('Invalid credentials', 401);
             }
+
             return ResponsHelper::success(['token' => $token], 'Login successful');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponsHelper::error($e->errors(), 422);
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
             return ResponsHelper::error('Login failed: ' . $e->getMessage(), 500);
