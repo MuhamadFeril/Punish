@@ -20,7 +20,7 @@ class EnsureRole
         }
 
         if ($user->role !== $role) {
-            return response()->json(['message' => 'Hanya ROle Admin Saja.'], 403);
+            return response()->json(['message' => 'Hanya Role Admin Saja.'], 403);
         }
 
         return $next($request);

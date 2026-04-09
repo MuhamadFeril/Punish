@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\JenisPelanggaranController;
 use App\Http\Controllers\Api\SanksiController;
 use App\Http\Controllers\Api\DepartemenController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Middleware\EnsureRole;
 
 // Auth routes (public)
 Route::post('register', [AuthController::class, 'register']);
@@ -19,14 +20,13 @@ Route::middleware('auth:sanctum')->group(function () {
    
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('pelanggaran', PelanggaranController::class)->middleware('throttle:5,1'); // Batasi 60 permintaan per menit untuk endpoint ini
-    Route::middleware([\App\Http\Middleware\EnsureRole::class . ':admin'])
-        ->get('sanksi/export-pdf', [SanksiController::class, 'exportPdf'])-> middleware('throttle:5,1'); // Batasi 5 permintaan per menit untuk endpoint ini
+    Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index']);
 
-    Route::apiResource('sanksi', SanksiController::class);
 
-    Route::middleware([\App\Http\Middleware\EnsureRole::class . ':admin'])->group(function () {
+    Route::middleware([EnsureRole::class . ':admin'])->group(function () {
         Route::apiResource('karyawan', KaryawanController::class);
         Route::apiResource('departemen', DepartemenController::class);
         Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class);
+        Route::apiResource('sanksi', SanksiController::class);
     });
 });
