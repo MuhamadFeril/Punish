@@ -187,7 +187,15 @@
 </style>
 
 <div class="page-header">
-    <h1 class="page-title">⚖️ Daftar Sanksi</h1>
+    <div>
+        <h1 class="page-title">⚖️ Daftar Sanksi</h1>
+        <p class="page-subtitle">Pantau semua sanksi karyawan, unduh surat peringatan, dan kelola statusnya di sini.</p>
+    </div>
+    <div class="action-buttons">
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('sanksi.create') }}" class="btn btn-primary">➕ Tambah Sanksi</a>
+        @endif
+    </div>
 </div>
 
 <div class="table-card">
@@ -216,6 +224,15 @@
                         <td>
                             <div class="action-buttons">
                                 <a href="{{ route('sanksi.show', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
+                                <a href="{{ route('sanksi.download', $item->id) }}" class="btn btn-detail" style="background:#2563eb;color:#fff;">📥 PDF</a>
+                                @if(auth()->user()->isAdmin())
+                                    <a href="{{ route('sanksi.edit', $item->id) }}" class="btn btn-detail" style="background:#fef3c7;color:#92400e;">✏️ Edit</a>
+                                    <form action="{{ route('sanksi.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-detail" style="background:#fee2e2;color:#991b1b;">🗑️ Hapus</button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -225,7 +242,10 @@
                             <div class="empty-state">
                                 <div class="empty-state-icon">⚖️</div>
                                 <div class="empty-state-text">Belum ada data sanksi yang tercatat</div>
-                                <p class="text-sm text-gray-500">Sanksi akan muncul setelah pelanggaran diproses</p>
+                                <p class="text-sm text-gray-500">Sanksi akan muncul setelah pelanggaran diproses.</p>
+                                @if(auth()->user()->isAdmin())
+                                    <a href="{{ route('sanksi.create') }}" class="btn btn-primary" style="margin-top:16px; display:inline-block;">Tambah Sanksi Sekarang</a>
+                                @endif
                             </div>
                         </td>
                     </tr>

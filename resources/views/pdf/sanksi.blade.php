@@ -198,7 +198,7 @@ body {
       Deskripsi: {{ $pelanggaran->jenisPelanggaran->deskripsi_pelanggaran ?? '-' }}
     </p>
     <p class="text">
-      Sanksi: <strong>{{ $pelanggaran->sanksi->first()->jenis_sanksi ?? 'SP-1' }}</strong>
+      Sanksi: <strong>{{ $sanksi->jenis_sanksi }}</strong>
     </p>
   </div>
 

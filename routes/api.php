@@ -16,26 +16,46 @@ Route::post('login', [AuthController::class, 'login']);
 
 // Protected routes (require auth)
 Route::middleware('auth:sanctum')->group(function () {
+
+   
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::apiResource('pelanggaran', PelanggaranController::class)->middleware('throttle:5,1'); // Batasi 60 permintaan per menit untuk endpoint ini
-
-    // Karyawan dapat dilihat oleh semua user yang sudah login
-    Route::get('karyawan', [KaryawanController::class, 'index']);
-    Route::get('karyawan/{id}', [KaryawanController::class, 'show']);
-
-    // Jenis pelanggaran dan sanksi yang bisa diakses semua user
-    Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index']);
-    Route::get('sanksi', [SanksiController::class, 'index']);
-    Route::get('sanksi/{sanksi}', [SanksiController::class, 'show']);
-    Route::get('sanksi/export-pdf', [SanksiController::class, 'exportPdf']);
+    Route::apiResource('pelanggaran', PelanggaranController::class)->middleware('throttle:5,1')->names([
+        'index' => 'pelanggaran.index',
+        'store' => 'pelanggaran.store',
+        'show' => 'pelanggaran.show',
+        'update' => 'pelanggaran.update',
+        'destroy' => 'pelanggaran.destroy'
+    ]); // Batasi 60 permintaan per menit untuk endpoint ini
+    Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index'])->name('jenis-pelanggaran.index.api');
+    Route::get('sanksi', [SanksiController::class, 'exportpdf'])->name('sanksi.exportpdf');
+    Route::get('karyawan', [KaryawanController::class, 'index'])->name('karyawan.index.api');
+    Route::put('karyawan/{id}', [KaryawanController::class, 'update'])->middleware('throttle:5,1')->name('karyawan.update.api'); // Batasi 60 permintaan per menit untuk endpoint ini
 
     Route::middleware([EnsureRole::class . ':admin'])->group(function () {
-        Route::post('karyawan', [KaryawanController::class, 'store'])->middleware('throttle:5,1');
-        Route::put('karyawan/{id}', [KaryawanController::class, 'update'])->middleware('throttle:5,1');
-        Route::delete('karyawan/{id}', [KaryawanController::class, 'destroy']);
-
-        Route::apiResource('departemen', DepartemenController::class);
-        Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class)->except(['index']);
-        Route::apiResource('sanksi', SanksiController::class)->except(['index', 'show']);
+        Route::apiResource('karyawan', KaryawanController::class)->except(['index', 'update'])->names([
+            'store' => 'karyawan.store.api',
+            'show' => 'karyawan.show.api',
+            'destroy' => 'karyawan.destroy.api'
+        ]);
+        Route::apiResource('departemen', DepartemenController::class)->names([
+            'index' => 'departemen.index.api',
+            'store' => 'departemen.store.api',
+            'show' => 'departemen.show.api',
+            'update' => 'departemen.update.api',
+            'destroy' => 'departemen.destroy.api'
+        ]);
+        Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class)->except(['index'])->names([
+            'store' => 'jenis-pelanggaran.store.api',
+            'show' => 'jenis-pelanggaran.show.api',
+            'update' => 'jenis-pelanggaran.update.api',
+            'destroy' => 'jenis-pelanggaran.destroy.api'
+        ]);
+        Route::apiResource('sanksi', SanksiController::class)->names([
+            'index' => 'sanksi.index.api',
+            'store' => 'sanksi.store.api',
+            'show' => 'sanksi.show.api',
+            'update' => 'sanksi.update.api',
+            'destroy' => 'sanksi.destroy.api'
+        ]);
     });
 });

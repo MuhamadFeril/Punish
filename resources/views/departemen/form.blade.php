@@ -156,7 +156,7 @@
 </div>
 
 <div class="form-card">
-    <form action="{{ isset($departemen) ? route('departemen.update', $departemen->id) : route('departemen.store') }}" method="POST" id="departemenForm">
+    <form action="{{ isset($departemen) ? route('departemen.update.admin', $departemen->id) : route('departemen.store.admin') }}" method="POST" id="departemenForm">
         @csrf
         @if(isset($departemen))
             @method('PUT')

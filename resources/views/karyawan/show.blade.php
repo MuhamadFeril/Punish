@@ -10,7 +10,7 @@
         @if(Auth::user()->role === 'admin')
             <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-primary">Edit</a>
         @endif
-        <a href="{{ route('karyawan.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('karyawan.index.web') }}" class="btn btn-secondary">Kembali</a>
     </div>
 </div>
 
@@ -76,7 +76,7 @@
                             <td>{{ $pelanggaran->tanggal_pelanggaran }}</td>
                             <td>{{ Str::limit($pelanggaran->keterangan_pelanggaran, 50) }}</td>
                             <td>
-                                <a href="{{ route('pelanggaran.show', $pelanggaran->id) }}" class="btn btn-secondary btn-sm">Detail</a>
+                                <a href="{{ route('pelanggaran.show.web', $pelanggaran->id) }}" class="btn btn-secondary btn-sm">Detail</a>
                             </td>
                         </tr>
                     @empty

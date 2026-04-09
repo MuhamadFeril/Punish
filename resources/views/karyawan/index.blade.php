@@ -219,7 +219,7 @@
                                 <a href="{{ route('karyawan.show', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
                                 @if(Auth::user()->role === 'admin')
                                     <a href="{{ route('karyawan.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                    <form action="{{ route('karyawan.destroy', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                    <form action="{{ route('karyawan.destroy.admin', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-delete">🗑️ Hapus</button>

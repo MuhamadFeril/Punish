@@ -193,7 +193,7 @@
                             <div class="action-buttons">
                                 @if(Auth::user()->role === 'admin')
                                     <a href="{{ route('departemen.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                    <form action="{{ route('departemen.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('departemen.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-delete" onclick="return confirm('Yakin ingin menghapus departemen ini?')">🗑️ Hapus</button>

@@ -217,7 +217,7 @@
                             <div class="action-buttons">
                                 @if(Auth::user()->role === 'admin')
                                     <a href="{{ route('jenis-pelanggaran.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                    <form action="{{ route('jenis-pelanggaran.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('jenis-pelanggaran.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-delete" onclick="return confirm('Yakin ingin menghapus jenis pelanggaran ini?')">🗑️ Hapus</button>

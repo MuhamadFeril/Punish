@@ -255,7 +255,7 @@
 
 @auth
     <div class="stats-grid">
-        @if(Auth::user()->role === 'admin')
+        @if($isAdmin)
             <div class="stat-card">
                 <div class="stat-value">{{ $totalKaryawan ?? 0 }}</div>
                 <div class="stat-label">👥 Total Karyawan</div>
@@ -269,22 +269,23 @@
                 <div class="stat-label">⚠️ Jenis Pelanggaran</div>
             </div>
         @endif
+
         <div class="stat-card">
             <div class="stat-value">{{ $totalPelanggaran ?? 0 }}</div>
-            <div class="stat-label">📋 Total Pelanggaran</div>
+            <div class="stat-label">📋 {{ $isAdmin ? 'Total Pelanggaran' : 'Pelanggaran Saya' }}</div>
         </div>
         <div class="stat-card">
             <div class="stat-value">{{ $totalSanksi ?? 0 }}</div>
-            <div class="stat-label">⚖️ Total Sanksi</div>
+            <div class="stat-label">⚖️ {{ $isAdmin ? 'Total Sanksi' : 'Sanksi Saya' }}</div>
         </div>
     </div>
 
-    <div class="two-column">
-        <div class="info-card">
-            <h3 class="section-title">📌 Menu Utama</h3>
-            <div class="menu-grid">
-                @if(Auth::user()->role === 'admin')
-                    <a href="{{ route('karyawan.index') }}" class="menu-btn">
+    @if($isAdmin)
+        <div class="two-column">
+            <div class="info-card">
+                <h3 class="section-title">📌 Menu Utama</h3>
+                <div class="menu-grid">
+                    <a href="{{ route('karyawan.index.web') }}" class="menu-btn">
                         <span class="menu-icon">👥</span>
                         Karyawan
                     </a>
@@ -296,32 +297,87 @@
                         <span class="menu-icon">⚠️</span>
                         Jenis Pelanggaran
                     </a>
+                    <a href="{{ route('pelanggaran.index.web') }}" class="menu-btn">
+                        <span class="menu-icon">📋</span>
+                        Pelanggaran
+                    </a>
+                    <a href="{{ route('sanksi.index') }}" class="menu-btn">
+                        <span class="menu-icon">⚖️</span>
+                        Sanksi
+                    </a>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3 class="section-title">ℹ️ Informasi Sistem</h3>
+                <ul class="info-list">
+                    <li><strong>Versi:</strong> 1.0.0</li>
+                    <li><strong>Sistem:</strong> Manajemen Pelanggaran Karyawan</li>
+                    <li>Manajemen Data Karyawan</li>
+                    <li>Manajemen Departemen</li>
+                    <li>Pencatatan Pelanggaran</li>
+                    <li>Pengelolaan Sanksi</li>
+                    <li>Sistem Keamanan Berbasis Role</li>
+                    <li>Laporan & Statistik</li>
+                </ul>
+            </div>
+        </div>
+    @else
+        <div class="two-column">
+            <div class="info-card">
+                <h3 class="section-title">📌 Menu Utama</h3>
+                <div class="menu-grid">
+                    <a href="{{ route('pelanggaran.index.web') }}" class="menu-btn">
+                        <span class="menu-icon">📋</span>
+                        Pelanggaran
+                    </a>
+                    <a href="{{ route('sanksi.index') }}" class="menu-btn">
+                        <span class="menu-icon">⚖️</span>
+                        Sanksi
+                    </a>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3 class="section-title">🔔 Notifikasi Anda</h3>
+                @if($notifications->isEmpty())
+                    <p>Tidak ada notifikasi baru.</p>
+                @else
+                    <ul class="info-list">
+                        @foreach($notifications as $notification)
+                            <li>
+                                <a href="{{ $notification->data['link'] ?? '#' }}" style="color: inherit; text-decoration: none;">
+                                    {{ $notification->data['title'] ?? 'Notifikasi' }} - {{ $notification->data['message'] ?? '' }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
                 @endif
-                <a href="{{ route('pelanggaran.index') }}" class="menu-btn">
-                    <span class="menu-icon">📋</span>
-                    Pelanggaran
-                </a>
-                <a href="{{ route('sanksi.index') }}" class="menu-btn">
-                    <span class="menu-icon">⚖️</span>
-                    Sanksi
-                </a>
+
+                <p style="margin-top: 16px; color: #6b7280;">
+                    {{ $unreadNotificationCount ?? 0 }} notifikasi belum dibaca.
+                </p>
             </div>
         </div>
 
         <div class="info-card">
-            <h3 class="section-title">ℹ️ Informasi Sistem</h3>
-            <ul class="info-list">
-                <li><strong>Versi:</strong> 1.0.0</li>
-                <li><strong>Sistem:</strong> Manajemen Pelanggaran Karyawan</li>
-                <li>Manajemen Data Karyawan</li>
-                <li>Manajemen Departemen</li>
-                <li>Pencatatan Pelanggaran</li>
-                <li>Pengelolaan Sanksi</li>
-                <li>Sistem Keamanan Berbasis Role</li>
-                <li>Laporan & Statistik</li>
-            </ul>
+            <h3 class="section-title">📄 Pelanggaran Terbaru</h3>
+            @if($recentPelanggaran->isEmpty())
+                <p>Tidak ada pelanggaran yang ditemukan untuk akun Anda.</p>
+            @else
+                <ul class="info-list">
+                    @foreach($recentPelanggaran as $item)
+                        <li>
+                            {{ $item->jenisPelanggaran->nama_jenis_pelanggaran ?? 'Pelanggaran' }} pada {{ date('d M Y', strtotime($item->tanggal_pelanggaran)) }}
+                            @if($item->sanksi)
+                                - Sanksi: {{ $item->sanksi->jenis_sanksi }}
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
-    </div>
+    @endif
 @else
     <div class="info-card" style="text-align: center; padding: 40px;">
         <p style="font-size: 16px; color: #6b7280; margin-bottom: 20px;">

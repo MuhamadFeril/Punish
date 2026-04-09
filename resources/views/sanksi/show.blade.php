@@ -185,12 +185,18 @@
         <h1 class="page-title">⚖️ Detail Sanksi</h1>
         <p class="page-subtitle">{{ ucfirst($sanksi->jenis_sanksi) }}</p>
     </div>
-    <a href="{{ route('sanksi.index') }}" class="back-btn">← Kembali</a>
+    <div style="display:flex;gap:12px;align-items:center;">
+        <a href="{{ route('sanksi.index') }}" class="back-btn">⬅️ Kembali</a>
+        <a href="{{ route('sanksi.download', $sanksi->id) }}" class="action-btn" style="background:#2563eb;">📥 Download PDF</a>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('sanksi.edit', $sanksi->id) }}" class="action-btn" style="background:#f59e0b;">✏️ Edit Sanksi</a>
+        @endif
+    </div>
 </div>
 
 <div class="info-grid">
     <div class="info-card">
-        <h2 class="card-title">📋 Data Sanksi</h2>
+        <h2 class="card-title">⚖️ Informasi Sanksi</h2>
         <div class="info-item">
             <div class="info-label">Jenis Sanksi</div>
             <div class="info-value">{{ ucfirst($sanksi->jenis_sanksi) }}</div>

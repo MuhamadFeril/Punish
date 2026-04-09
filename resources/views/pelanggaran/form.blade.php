@@ -242,7 +242,7 @@
     </div>
 
     <div class="form-card">
-        <form action="{{ isset($pelanggaran) ? route('pelanggaran.update', $pelanggaran->id) : route('pelanggaran.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ isset($pelanggaran) ? route('pelanggaran.update.web', $pelanggaran->id) : route('pelanggaran.store.web') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if(isset($pelanggaran))
                 @method('PUT')
@@ -349,7 +349,7 @@
                 <button type="submit" class="btn btn-submit">
                     🚀 {{ isset($pelanggaran) ? 'Update' : 'Simpan' }}
                 </button>
-                <a href="{{ route('pelanggaran.index') }}" class="btn btn-cancel">
+                <a href="{{ route('pelanggaran.index.web') }}" class="btn btn-cancel">
                     ❌ Batal
                 </a>
             </div>
@@ -391,54 +391,4 @@
         fileInput.files = files;
     });
 </script>
-@endsection 
-                name="tanggal_pelanggaran" 
-                class="w-full"
-                value="{{ old('tanggal_pelanggaran', isset($pelanggaran) ? $pelanggaran->tanggal_pelanggaran->format('Y-m-d') : '') }}"
-                required
-            >
-            @error('tanggal_pelanggaran')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="mb-6">
-            <label for="keterangan_pelanggaran" class="block text-sm font-semibold mb-2">Keterangan *</label>
-            <textarea 
-                id="keterangan_pelanggaran" 
-                name="keterangan_pelanggaran" 
-                class="w-full" 
-                rows="4"
-                required
-            >{{ old('keterangan_pelanggaran', $pelanggaran->keterangan_pelanggaran ?? '') }}</textarea>
-            @error('keterangan_pelanggaran')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="mb-6">
-            <label for="bukti_pelanggaran" class="block text-sm font-semibold mb-2">Bukti/Foto</label>
-            <input 
-                type="file" 
-                id="bukti_pelanggaran" 
-                name="bukti_pelanggaran" 
-                class="w-full"
-                accept="image/*"
-            >
-            @if(isset($pelanggaran) && $pelanggaran->bukti_pelanggaran)
-                <p class="text-sm text-gray-600 mt-2">Current: {{ basename($pelanggaran->bukti_pelanggaran) }}</p>
-            @endif
-            @error('bukti_pelanggaran')
-                <span class="text-red-600 text-sm">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                {{ isset($pelanggaran) ? 'Update' : 'Lapor' }}
-            </button>
-            <a href="{{ route('pelanggaran.index') }}" class="btn btn-secondary">Batal</a>
-        </div>
-    </form>
-</div>
 @endsection

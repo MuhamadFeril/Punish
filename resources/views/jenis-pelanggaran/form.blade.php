@@ -193,7 +193,7 @@
 </div>
 
 <div class="form-card">
-    <form action="{{ isset($jenisPelanggaran) ? route('jenis-pelanggaran.update', $jenisPelanggaran->id) : route('jenis-pelanggaran.store') }}" method="POST" id="jenisPelanggaranForm">
+    <form action="{{ isset($jenisPelanggaran) ? route('jenis-pelanggaran.update.admin', $jenisPelanggaran->id) : route('jenis-pelanggaran.store.admin') }}" method="POST" id="jenisPelanggaranForm">
         @csrf
         @if(isset($jenisPelanggaran))
             @method('PUT')

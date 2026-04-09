@@ -249,7 +249,7 @@
 </div>
 
 <div class="search-card">
-    <form action="{{ route('pelanggaran.index') }}" method="GET" class="search-form">
+    <form action="{{ route('pelanggaran.index.web') }}" method="GET" class="search-form">
         <input 
             type="text" 
             name="search" 
@@ -286,9 +286,9 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('pelanggaran.show', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
+                                <a href="{{ route('pelanggaran.show.web', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
                                 <a href="{{ route('pelanggaran.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                <form action="{{ route('pelanggaran.destroy', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                <form action="{{ route('pelanggaran.destroy.web', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-delete">🗑️ Hapus</button>

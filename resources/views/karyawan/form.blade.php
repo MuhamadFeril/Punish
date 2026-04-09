@@ -243,7 +243,7 @@
     </div>
 
     <div class="form-card">
-        <form action="{{ isset($karyawan) ? route('karyawan.update', $karyawan->id) : route('karyawan.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ isset($karyawan) ? route('karyawan.update.admin', $karyawan->id) : route('karyawan.store.admin') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if(isset($karyawan))
                 @method('PUT')
@@ -378,7 +378,7 @@
                 <button type="submit" class="btn btn-submit">
                     🚀 {{ isset($karyawan) ? 'Update' : 'Simpan' }}
                 </button>
-                <a href="{{ route('karyawan.index') }}" class="btn btn-cancel">
+                <a href="{{ route('karyawan.index.web') }}" class="btn btn-cancel">
                     ❌ Batal
                 </a>
             </div>

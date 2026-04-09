@@ -8,7 +8,7 @@
     </div>
     <div class="flex gap-2">
         <a href="{{ route('pelanggaran.edit', $pelanggaran->id) }}" class="btn btn-primary">Edit</a>
-        <a href="{{ route('pelanggaran.index') }}" class="btn btn-secondary">Kembali</a>
+        <a href="{{ route('pelanggaran.index.web') }}" class="btn btn-secondary">Kembali</a>
     </div>
 </div>
 

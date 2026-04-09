@@ -427,11 +427,11 @@
                             <a href="{{ route('dashboard') }}">Dashboard</a>
                             @auth
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('karyawan.index') }}">Karyawan</a>
-                                    <a href="{{ route('departemen.index') }}">Departemen</a>
-                                    <a href="{{ route('jenis-pelanggaran.index') }}">Jenis Pelanggaran</a>
+                                    <a href="{{ route('karyawan.index.web') }}">Karyawan</a>
                                 @endif
-                                <a href="{{ route('pelanggaran.index') }}">Pelanggaran</a>
+                                <a href="{{ route('departemen.index') }}">Departemen</a>
+                                <a href="{{ route('jenis-pelanggaran.index') }}">Jenis Pelanggaran</a>
+                                <a href="{{ route('pelanggaran.index.web') }}">Pelanggaran</a>
                                 <a href="{{ route('sanksi.index') }}">Sanksi</a>
                             @endauth
                         </nav>
