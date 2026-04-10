@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
         // create admin if not exists (hardcoded credentials)
         $email = 'admin@gmail.com';
         $name = 'Admin King';
-        $password = 'Password2026';
+        $password = 'qwertyuiop';
 
         User::updateOrCreate(
             ['email' => $email],

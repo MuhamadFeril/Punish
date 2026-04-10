@@ -25,12 +25,10 @@ class PelanggaranController extends Controller
     public function index(Request $request)
     {
         try {
-                return SearchHelper::search($request, Pelanggaran::class, ['keterangan_pelanggaran', 'bukti_pelanggaran'], ['karyawan', 'jenisPelanggaran', 'sanksi'], PelanggaranResource::class);
+            return SearchHelper::search($request, Pelanggaran::class, ['keterangan_pelanggaran', 'bukti_pelanggaran'], ['karyawan', 'jenisPelanggaran', 'sanksi'], PelanggaranResource::class);
         } catch (\Exception $e) {
             Log::error('Gagal mengambil data pelanggaran: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
-            return ResponsHelper::error('Gagal mengambil data pelanggaran', 500);            
-        } catch (\Exception $e) {
             return ResponsHelper::error('Gagal mengambil data pelanggaran', 500);            
         }
     }

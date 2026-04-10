@@ -8,7 +8,7 @@
     </div>
     <div class="flex gap-2">
         @if(Auth::user()->role === 'admin')
-            <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-primary">Edit</a>
+            <a href="{{ route('karyawan.edit.web', $karyawan->id) }}" class="btn btn-primary">Edit</a>
         @endif
         <a href="{{ route('karyawan.index.web') }}" class="btn btn-secondary">Kembali</a>
     </div>

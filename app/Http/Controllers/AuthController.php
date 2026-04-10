@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departemen;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +35,9 @@ class AuthController extends Controller
 
             if (Auth::attempt($credentials, $request->boolean('remember'))) {
                 $request->session()->regenerate();
-                return redirect()->intended('dashboard')->with('success', 'Selamat datang!');
+                $redirectTo = $this->redirectToDashboard();
+
+                return redirect()->intended($redirectTo)->with('success', 'Selamat datang!');
             }
 
             return back()
@@ -45,6 +49,15 @@ class AuthController extends Controller
         }
     }
 
+    private function redirectToDashboard(): string
+    {
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return route('dashboard');
+        }
+
+        return route('dashboard');
+    }
+
     /**
      * Show register form
      */
@@ -53,7 +66,13 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('dashboard');
         }
-        return view('auth.register');
+
+        if (Departemen::count() === 0) {
+            Departemen::create(['nama_departemen' => 'Umum']);
+        }
+
+        $departemens = Departemen::all();
+        return view('auth.register', compact('departemens'));
     }
 
     /**
@@ -66,6 +85,7 @@ class AuthController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'departemen_id' => ['required', 'exists:departemens,id'],
             ]);
 
             $user = User::create([
@@ -73,6 +93,15 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'password' => $validated['password'],
                 'role' => 'user',
+            ]);
+
+            Karyawan::create([
+                'nama_karyawan' => $validated['name'],
+                'email_karyawan' => $validated['email'],
+                'alamat_karyawan' => '-',
+                'departemen_id' => $validated['departemen_id'],
+                'jabatan_karyawan' => 'Staf',
+                'status' => 'aktif',
             ]);
 
             Auth::login($user);

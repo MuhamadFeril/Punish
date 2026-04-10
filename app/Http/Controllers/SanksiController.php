@@ -30,7 +30,6 @@ class SanksiController extends Controller
             'jenis_sanksi' => 'required|string|max:255',
             'tanggal_sanksi' => 'required|date',
             'keterangan_sanksi' => 'nullable|string|max:2000',
-            'status' => 'required|in:aktif,selesai',
         ]);
 
         $sanksi = Sanksi::create($validated);
@@ -43,7 +42,7 @@ class SanksiController extends Controller
             }
         }
 
-        return redirect()->route('sanksi.show', $sanksi->id)->with('success', 'Sanksi berhasil ditambahkan. Silakan download PDF untuk dikirim ke karyawan.');
+        return redirect()->route('sanksi.show.web', $sanksi->id)->with('success', 'Sanksi berhasil ditambahkan. Silakan download PDF untuk dikirim ke karyawan.');
     }
 
     public function show(Sanksi $sanksi)
@@ -65,19 +64,18 @@ class SanksiController extends Controller
             'jenis_sanksi' => 'required|string|max:255',
             'tanggal_sanksi' => 'required|date',
             'keterangan_sanksi' => 'nullable|string|max:2000',
-            'status' => 'required|in:aktif,selesai',
         ]);
 
         $sanksi->update($validated);
 
-        return redirect()->route('sanksi.index')->with('success', 'Sanksi berhasil diperbarui.');
+        return redirect()->route('sanksi.index.web')->with('success', 'Sanksi berhasil diperbarui.');
     }
 
     public function destroy(Sanksi $sanksi)
     {
         $sanksi->delete();
 
-        return redirect()->route('sanksi.index')->with('success', 'Sanksi berhasil dihapus.');
+        return redirect()->route('sanksi.index.web')->with('success', 'Sanksi berhasil dihapus.');
     }
 
     public function downloadPdf(Sanksi $sanksi)

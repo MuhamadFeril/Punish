@@ -185,7 +185,7 @@
 <div class="page-header">
     <h1 class="page-title">⚖️ Daftar Jenis Pelanggaran</h1>
     @if(Auth::user()->role === 'admin')
-        <a href="{{ route('jenis-pelanggaran.create') }}" class="btn btn-create">
+        <a href="{{ route('jenis-pelanggaran.create.web') }}" class="btn btn-create">
             ➕ Tambah Jenis Pelanggaran
         </a>
     @endif
@@ -216,8 +216,8 @@
                         <td>
                             <div class="action-buttons">
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('jenis-pelanggaran.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                    <form action="{{ route('jenis-pelanggaran.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
+                                    <a href="{{ route('jenis-pelanggaran.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
+                                    <form action="{{ route('jenis-pelanggaran.destroy.web', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-delete" onclick="return confirm('Yakin ingin menghapus jenis pelanggaran ini?')">🗑️ Hapus</button>
@@ -233,7 +233,7 @@
                                 <div class="empty-state-icon">⚖️</div>
                                 <div class="empty-state-text">Tidak ada data jenis pelanggaran</div>
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('jenis-pelanggaran.create') }}" class="btn btn-create">
+                                    <a href="{{ route('jenis-pelanggaran.create.web') }}" class="btn btn-create">
                                         ➕ Tambah Jenis Pelanggaran Baru
                                     </a>
                                 @endif

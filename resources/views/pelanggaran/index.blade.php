@@ -243,7 +243,7 @@
 
 <div class="page-header">
     <h1 class="page-title">📋 Daftar Pelanggaran</h1>
-    <a href="{{ route('pelanggaran.create') }}" class="btn btn-create">
+    <a href="{{ route('pelanggaran.create.web') }}" class="btn btn-create">
         ➕ Lapor Pelanggaran
     </a>
 </div>
@@ -287,7 +287,7 @@
                         <td>
                             <div class="action-buttons">
                                 <a href="{{ route('pelanggaran.show.web', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
-                                <a href="{{ route('pelanggaran.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
+                                <a href="{{ route('pelanggaran.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
                                 <form action="{{ route('pelanggaran.destroy.web', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                     @csrf
                                     @method('DELETE')
@@ -302,7 +302,7 @@
                             <div class="empty-state">
                                 <div class="empty-state-icon">📭</div>
                                 <div class="empty-state-text">Tidak ada data pelanggaran</div>
-                                <a href="{{ route('pelanggaran.create') }}" class="btn btn-create">
+                                    <a href="{{ route('pelanggaran.create.web') }}" class="btn btn-create">
                                     ➕ Buat Pelanggaran Baru
                                 </a>
                             </div>

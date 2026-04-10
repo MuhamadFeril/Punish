@@ -28,6 +28,12 @@ class DepartemenController extends Controller
         return redirect('departemen')->with('success', 'Departemen berhasil ditambahkan');
     }
 
+    public function show(Departemen $departemen)
+    {
+        $departemen->load('karyawan');
+        return view('departemen.show', compact('departemen'));
+    }
+
     public function edit(Departemen $departemen)
     {
         return view('departemen.form', compact('departemen'));

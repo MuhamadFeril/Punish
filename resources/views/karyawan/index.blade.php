@@ -183,13 +183,31 @@
 <div class="page-header">
     <h1 class="page-title">👥 Daftar Karyawan</h1>
     @if(Auth::user()->role === 'admin')
-        <a href="{{ route('karyawan.create') }}" class="btn btn-create">
+        <a href="{{ route('karyawan.create.web') }}" class="btn btn-create">
             ➕ Tambah Karyawan
         </a>
     @endif
 </div>
 
 <div class="table-card">
+    <form action="{{ route('karyawan.index.web') }}" method="GET" style="margin-bottom: 20px; display: flex; gap: 10px;">
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="🔍 Cari nama atau email karyawan..." 
+            value="{{ request('search') }}"
+            style="flex: 1; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px;"
+        >
+        <button type="submit" style="padding: 12px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">
+            Cari
+        </button>
+        @if(request('search'))
+            <a href="{{ route('karyawan.index.web') }}" style="padding: 12px 20px; background: #e5e7eb; color: #1f2937; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; text-decoration: none; display: flex; align-items: center;">
+                ✕ Bersihkan
+            </a>
+        @endif
+    </form>
+
     <div class="table-wrapper">
         <table>
             <thead>
@@ -216,9 +234,9 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('karyawan.show', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
+                                <a href="{{ route('karyawan.show.web', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('karyawan.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
+                                    <a href="{{ route('karyawan.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
                                     <form action="{{ route('karyawan.destroy.admin', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
                                         @method('DELETE')
@@ -235,7 +253,7 @@
                                 <div class="empty-state-icon">👥</div>
                                 <div class="empty-state-text">Tidak ada data karyawan</div>
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('karyawan.create') }}" class="btn btn-create">
+                                    <a href="{{ route('karyawan.create.web') }}" class="btn btn-create">
                                         ➕ Tambah Karyawan Baru
                                     </a>
                                 @endif

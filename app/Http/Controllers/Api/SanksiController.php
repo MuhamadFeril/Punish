@@ -88,44 +88,45 @@ class SanksiController extends Controller
             return response()->json(['message' => 'Gagal menghapus sanksi'], 500);
         }
     }
-   public function exportPdf()
-{
-    try {
-        // eager-load nested relations so the view can read karyawan, departemen, jenisPelanggaran and sanksi
-        $sanksis = Sanksi::with([
-            'pelanggaran.karyawan.departemen',
-            'pelanggaran.jenisPelanggaran',
-            'pelanggaran.sanksi'
-        ])->get();
 
-        if ($sanksis->isEmpty()) {
-            return response()->json(['message' => 'Tidak ada data sanksi untuk diekspor'], 404);
+    public function exportPdf()
+    {
+        try {
+            // eager-load nested relations so the view can read karyawan, departemen, jenisPelanggaran and sanksi
+            $sanksis = Sanksi::with([
+                'pelanggaran.karyawan.departemen',
+                'pelanggaran.jenisPelanggaran',
+                'pelanggaran.sanksi'
+            ])->get();
+
+            if ($sanksis->isEmpty()) {
+                return response()->json(['message' => 'Tidak ada data sanksi untuk diekspor'], 404);
+            }
+
+            // For the current template which renders a single letter, pass the first
+            // pelanggaran related to the first sanksi as `pelanggaran` so the view
+            // variable expected in the blade exists.
+            $firstSanksi = $sanksis->first();
+
+            if (!$firstSanksi || !$firstSanksi->pelanggaran) {
+                Log::warning('Export PDF: first sanksi or related pelanggaran missing');
+                return response()->json(['message' => 'Data pelanggaran terkait tidak ditemukan untuk ekspor'], 404);
+            }
+
+            $pelanggaran = $firstSanksi->pelanggaran;
+
+            $pdf = Pdf::loadView('pdf.sanksi', [
+                'sanksi' => $firstSanksi,
+                'pelanggaran' => $pelanggaran,
+            ])->setPaper('a4', 'landscape');
+
+            return $pdf->download('sanksi-' . $firstSanksi->id . '.pdf');
+        } catch (ModelNotFoundException $e) {
+            Log::error('Model not found when exporting sanksi PDF: ' . $e->getMessage());
+            return response()->json(['message' => 'Gagal mengambil data sanksi: data tidak ditemukan'], 404);
+        } catch (\Exception $e) {
+            Log::error('Error exporting sanksi PDF: ' . $e->getMessage());
+            return response()->json(['message' => 'Gagal mengekspor sanksi: ' . $e->getMessage()], 500);
         }
-
-        // For the current template which renders a single letter, pass the first
-        // pelanggaran related to the first sanksi as `pelanggaran` so the view
-        // variable expected in the blade exists.
-        $firstSanksi = $sanksis->first();
-
-        if (!$firstSanksi || !$firstSanksi->pelanggaran) {
-            Log::warning('Export PDF: first sanksi or related pelanggaran missing');
-            return response()->json(['message' => 'Data pelanggaran terkait tidak ditemukan untuk ekspor'], 404);
-        }
-
-        $pelanggaran = $firstSanksi->pelanggaran;
-
-        $pdf = Pdf::loadView('pdf.sanksi', [
-            'sanksi' => $sanksis,
-            'pelanggaran' => $pelanggaran,
-        ])->setPaper('a4', 'landscape');
-
-        return $pdf->download('data-sanksi.pdf');
-    } catch (ModelNotFoundException $e) {
-        Log::error('Model not found when exporting sanksi PDF: ' . $e->getMessage());
-        return response()->json(['message' => 'Gagal mengambil data sanksi: data tidak ditemukan'], 404);
-    } catch (\Exception $e) {
-        Log::error('Error exporting sanksi PDF: ' . $e->getMessage());
-        return response()->json(['message' => 'Gagal mengekspor sanksi: ' . $e->getMessage()], 500);
     }
-}
 }

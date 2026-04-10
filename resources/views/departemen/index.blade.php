@@ -164,7 +164,7 @@
 <div class="page-header">
     <h1 class="page-title">🏢 Daftar Departemen</h1>
     @if(Auth::user()->role === 'admin')
-        <a href="{{ route('departemen.create') }}" class="btn btn-create">
+        <a href="{{ route('departemen.create.web') }}" class="btn btn-create">
             ➕ Tambah Departemen
         </a>
     @endif
@@ -192,8 +192,8 @@
                         <td>
                             <div class="action-buttons">
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('departemen.edit', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
-                                    <form action="{{ route('departemen.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
+                                    <a href="{{ route('departemen.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
+                                    <form action="{{ route('departemen.destroy.web', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-delete" onclick="return confirm('Yakin ingin menghapus departemen ini?')">🗑️ Hapus</button>
@@ -209,7 +209,7 @@
                                 <div class="empty-state-icon">🏢</div>
                                 <div class="empty-state-text">Tidak ada data departemen</div>
                                 @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('departemen.create') }}" class="btn btn-create">
+                                    <a href="{{ route('departemen.create.web') }}" class="btn btn-create">
                                         ➕ Tambah Departemen Baru
                                     </a>
                                 @endif

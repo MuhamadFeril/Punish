@@ -156,7 +156,7 @@
 </div>
 
 <div class="form-card">
-    <form action="{{ isset($departemen) ? route('departemen.update.admin', $departemen->id) : route('departemen.store.admin') }}" method="POST" id="departemenForm">
+    <form action="{{ isset($departemen) ? route('departemen.update.web', $departemen->id) : route('departemen.store.web') }}" method="POST" id="departemenForm">
         @csrf
         @if(isset($departemen))
             @method('PUT')
@@ -179,7 +179,7 @@
         </div>
 
         <div class="form-actions">
-            <a href="{{ route('departemen.index') }}" class="btn btn-secondary">⬅️ Batal</a>
+            <a href="{{ route('departemen.index.web') }}" class="btn btn-secondary">⬅️ Batal</a>
             <button type="submit" class="btn btn-primary">
                 {{ isset($departemen) ? '💾 Simpan Perubahan' : '➕ Tambah Departemen' }}
             </button>

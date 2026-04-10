@@ -16,46 +16,58 @@ Route::post('login', [AuthController::class, 'login']);
 
 // Protected routes (require auth)
 Route::middleware('auth:sanctum')->group(function () {
-
-   
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::apiResource('pelanggaran', PelanggaranController::class)->middleware('throttle:5,1')->names([
-        'index' => 'pelanggaran.index',
-        'store' => 'pelanggaran.store',
-        'show' => 'pelanggaran.show',
-        'update' => 'pelanggaran.update',
-        'destroy' => 'pelanggaran.destroy'
-    ]); // Batasi 60 permintaan per menit untuk endpoint ini
-    Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index'])->name('jenis-pelanggaran.index.api');
-    Route::get('sanksi', [SanksiController::class, 'exportpdf'])->name('sanksi.exportpdf');
-    Route::get('karyawan', [KaryawanController::class, 'index'])->name('karyawan.index.api');
-    Route::put('karyawan/{id}', [KaryawanController::class, 'update'])->middleware('throttle:5,1')->name('karyawan.update.api'); // Batasi 60 permintaan per menit untuk endpoint ini
-
+    
+    // Pelanggaran API
+    Route::apiResource('pelanggaran', PelanggaranController::class)->middleware('throttle:5,1')->parameters(['pelanggaran' => 'pelanggaran'])->names([
+        'index' => 'api.pelanggaran.index',
+        'store' => 'api.pelanggaran.store',
+        'show' => 'api.pelanggaran.show',
+        'update' => 'api.pelanggaran.update',
+        'destroy' => 'api.pelanggaran.destroy',
+    ]);
+    
     Route::middleware([EnsureRole::class . ':admin'])->group(function () {
-        Route::apiResource('karyawan', KaryawanController::class)->except(['index', 'update'])->names([
-            'store' => 'karyawan.store.api',
-            'show' => 'karyawan.show.api',
-            'destroy' => 'karyawan.destroy.api'
-        ]);
-        Route::apiResource('departemen', DepartemenController::class)->names([
-            'index' => 'departemen.index.api',
-            'store' => 'departemen.store.api',
-            'show' => 'departemen.show.api',
-            'update' => 'departemen.update.api',
-            'destroy' => 'departemen.destroy.api'
-        ]);
-        Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class)->except(['index'])->names([
-            'store' => 'jenis-pelanggaran.store.api',
-            'show' => 'jenis-pelanggaran.show.api',
-            'update' => 'jenis-pelanggaran.update.api',
-            'destroy' => 'jenis-pelanggaran.destroy.api'
-        ]);
-        Route::apiResource('sanksi', SanksiController::class)->names([
-            'index' => 'sanksi.index.api',
-            'store' => 'sanksi.store.api',
-            'show' => 'sanksi.show.api',
-            'update' => 'sanksi.update.api',
-            'destroy' => 'sanksi.destroy.api'
-        ]);
+        Route::apiResource('karyawan', KaryawanController::class)
+            ->parameters(['karyawan' => 'karyawan'])
+            ->names([
+                'index' => 'api.karyawan.index',
+                'store' => 'api.karyawan.store',
+                'show' => 'api.karyawan.show',
+                'update' => 'api.karyawan.update',
+                'destroy' => 'api.karyawan.destroy',
+            ]);
+        
+        Route::apiResource('departemen', DepartemenController::class)
+            ->parameters(['departemen' => 'departemen'])
+            ->names([
+                'index' => 'api.departemen.index',
+                'store' => 'api.departemen.store',
+                'show' => 'api.departemen.show',
+                'update' => 'api.departemen.update',
+                'destroy' => 'api.departemen.destroy',
+            ]);
+        
+        Route::apiResource('jenis-pelanggaran', JenisPelanggaranController::class)
+            ->parameters(['jenis-pelanggaran' => 'jenis_pelanggaran'])
+            ->names([
+                'index' => 'api.jenis-pelanggaran.index',
+                'store' => 'api.jenis-pelanggaran.store',
+                'show' => 'api.jenis-pelanggaran.show',
+                'update' => 'api.jenis-pelanggaran.update',
+                'destroy' => 'api.jenis-pelanggaran.destroy',
+            ]);
+        
+        // Sanksi routes - PDF export MUST come before apiResource
+        Route::get('sanksi/export/pdf', [SanksiController::class, 'exportPdf'])->name('api.sanksi.export-pdf');
+        Route::apiResource('sanksi', SanksiController::class)
+            ->parameters(['sanksi' => 'sanksi'])
+            ->names([
+                'index' => 'api.sanksi.index',
+                'store' => 'api.sanksi.store',
+                'show' => 'api.sanksi.show',
+                'update' => 'api.sanksi.update',
+                'destroy' => 'api.sanksi.destroy',
+            ]);
     });
 });

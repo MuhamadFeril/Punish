@@ -429,16 +429,17 @@
                                 @if(Auth::user()->role === 'admin')
                                     <a href="{{ route('karyawan.index.web') }}">Karyawan</a>
                                 @endif
-                                <a href="{{ route('departemen.index') }}">Departemen</a>
-                                <a href="{{ route('jenis-pelanggaran.index') }}">Jenis Pelanggaran</a>
+                                <a href="{{ route('departemen.index.web') }}">Departemen</a>
+                                <a href="{{ route('jenis-pelanggaran.index.web') }}">Jenis Pelanggaran</a>
                                 <a href="{{ route('pelanggaran.index.web') }}">Pelanggaran</a>
-                                <a href="{{ route('sanksi.index') }}">Sanksi</a>
+                                <a href="{{ route('sanksi.index.web') }}">Sanksi</a>
                             @endauth
                         </nav>
                     </div>
                     <div class="flex items-center gap-4">
                         @auth
                             <span class="text-sm text-gray-600">👤 {{ Auth::user()->name }}</span>
+                            <a href="{{ route('profile.show') }}" class="btn btn-secondary btn-sm">👁️ Profil</a>
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary btn-sm">Logout</button>

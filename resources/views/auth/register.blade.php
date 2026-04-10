@@ -115,11 +115,27 @@
         background: #f9fafb;
     }
     
-    .form-input:focus {
+    .form-input:focus,
+    select.form-input:focus {
         outline: none;
         border-color: #667eea;
         box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         background: white;
+    }
+
+    select.form-input {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 20px;
+        padding-right: 40px;
+    }
+
+    select.form-input option {
+        background: white;
+        color: #1f2937;
     }
     
     .form-error {
@@ -258,6 +274,21 @@
                     required
                 >
                 @error('email')
+                    <div class="form-error">✗ {{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="departemen_id" class="form-label">🏢 Departemen</label>
+                <select id="departemen_id" name="departemen_id" class="form-input" required>
+                    <option value="" disabled {{ old('departemen_id') ? '' : 'selected' }}>Pilih departemen</option>
+                    @foreach($departemens as $departemen)
+                        <option value="{{ $departemen->id }}" {{ old('departemen_id') == $departemen->id ? 'selected' : '' }}>
+                            {{ $departemen->nama_departemen }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('departemen_id')
                     <div class="form-error">✗ {{ $message }}</div>
                 @enderror
             </div>

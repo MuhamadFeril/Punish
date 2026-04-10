@@ -189,11 +189,11 @@
 <div class="page-header">
     <div>
         <h1 class="page-title">⚖️ Daftar Sanksi</h1>
-        <p class="page-subtitle">Pantau semua sanksi karyawan, unduh surat peringatan, dan kelola statusnya di sini.</p>
+        <p class="page-subtitle">Pantau semua sanksi karyawan dan unduh surat peringatan di sini.</p>
     </div>
     <div class="action-buttons">
         @if(auth()->user()->isAdmin())
-            <a href="{{ route('sanksi.create') }}" class="btn btn-primary">➕ Tambah Sanksi</a>
+            <a href="{{ route('sanksi.create.web') }}" class="btn btn-primary">➕ Tambah Sanksi</a>
         @endif
     </div>
 </div>
@@ -206,7 +206,6 @@
                     <th>👤 Karyawan</th>
                     <th>⚖️ Jenis Sanksi</th>
                     <th>📅 Tanggal</th>
-                    <th>📊 Status</th>
                     <th>🎯 Aksi</th>
                 </tr>
             </thead>
@@ -217,17 +216,12 @@
                         <td class="sanction-type">{{ ucfirst($item->jenis_sanksi) }}</td>
                         <td class="sanction-date">{{ \Carbon\Carbon::parse($item->tanggal_sanksi)->format('d-m-Y') }}</td>
                         <td>
-                            <span class="status-badge {{ $item->status === 'aktif' ? 'status-aktif' : 'status-selesai' }}">
-                                {{ $item->status === 'aktif' ? '⏳ Aktif' : '✅ Selesai' }}
-                            </span>
-                        </td>
-                        <td>
                             <div class="action-buttons">
-                                <a href="{{ route('sanksi.show', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
+                                <a href="{{ route('sanksi.show.web', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
                                 <a href="{{ route('sanksi.download', $item->id) }}" class="btn btn-detail" style="background:#2563eb;color:#fff;">📥 PDF</a>
                                 @if(auth()->user()->isAdmin())
-                                    <a href="{{ route('sanksi.edit', $item->id) }}" class="btn btn-detail" style="background:#fef3c7;color:#92400e;">✏️ Edit</a>
-                                    <form action="{{ route('sanksi.destroy.admin', $item->id) }}" method="POST" style="display:inline;">
+                                    <a href="{{ route('sanksi.edit.web', $item->id) }}" class="btn btn-detail" style="background:#fef3c7;color:#92400e;">✏️ Edit</a>
+                                    <form action="{{ route('sanksi.destroy.web', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-detail" style="background:#fee2e2;color:#991b1b;">🗑️ Hapus</button>
@@ -244,7 +238,7 @@
                                 <div class="empty-state-text">Belum ada data sanksi yang tercatat</div>
                                 <p class="text-sm text-gray-500">Sanksi akan muncul setelah pelanggaran diproses.</p>
                                 @if(auth()->user()->isAdmin())
-                                    <a href="{{ route('sanksi.create') }}" class="btn btn-primary" style="margin-top:16px; display:inline-block;">Tambah Sanksi Sekarang</a>
+                                    <a href="{{ route('sanksi.create.web') }}" class="btn btn-primary" style="margin-top:16px; display:inline-block;">Tambah Sanksi Sekarang</a>
                                 @endif
                             </div>
                         </td>

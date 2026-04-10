@@ -186,10 +186,10 @@
         <p class="page-subtitle">{{ ucfirst($sanksi->jenis_sanksi) }}</p>
     </div>
     <div style="display:flex;gap:12px;align-items:center;">
-        <a href="{{ route('sanksi.index') }}" class="back-btn">⬅️ Kembali</a>
+        <a href="{{ route('sanksi.index.web') }}" class="back-btn">⬅️ Kembali</a>
         <a href="{{ route('sanksi.download', $sanksi->id) }}" class="action-btn" style="background:#2563eb;">📥 Download PDF</a>
         @if(auth()->user()->isAdmin())
-            <a href="{{ route('sanksi.edit', $sanksi->id) }}" class="action-btn" style="background:#f59e0b;">✏️ Edit Sanksi</a>
+            <a href="{{ route('sanksi.edit.web', $sanksi->id) }}" class="action-btn" style="background:#f59e0b;">✏️ Edit Sanksi</a>
         @endif
     </div>
 </div>
@@ -206,14 +206,6 @@
             <div class="info-value">{{ \Carbon\Carbon::parse($sanksi->tanggal_sanksi)->format('d-m-Y') }}</div>
         </div>
         <div class="info-item">
-            <div class="info-label">Status</div>
-            <div class="info-value">
-                <span class="status-badge {{ $sanksi->status === 'aktif' ? 'status-aktif' : 'status-selesai' }}">
-                    {{ $sanksi->status === 'aktif' ? '⏳ Aktif' : '✅ Selesai' }}
-                </span>
-            </div>
-        </div>
-        <div class="info-item">
             <div class="info-label">Keterangan</div>
             <div class="info-value description-text">{{ $sanksi->keterangan_sanksi }}</div>
         </div>
@@ -224,7 +216,7 @@
         <div class="info-item">
             <div class="info-label">Karyawan</div>
             <div class="info-value">
-                <a href="{{ route('karyawan.show', $sanksi->pelanggaran->karyawan->id) }}" class="info-link">
+                <a href="{{ route('karyawan.show.web', $sanksi->pelanggaran->karyawan->id) }}" class="info-link">
                     {{ $sanksi->pelanggaran->karyawan->nama_karyawan }}
                 </a>
             </div>
@@ -242,7 +234,7 @@
             <div class="info-value">{{ \Carbon\Carbon::parse($sanksi->pelanggaran->tanggal_pelanggaran)->format('d-m-Y') }}</div>
         </div>
         <div class="info-item">
-            <a href="{{ route('pelanggaran.show', $sanksi->pelanggaran->id) }}" class="action-btn">
+            <a href="{{ route('pelanggaran.show.web', $sanksi->pelanggaran->id) }}" class="action-btn">
                 📄 Lihat Laporan Pelanggaran Lengkap
             </a>
         </div>

@@ -289,11 +289,11 @@
                         <span class="menu-icon">👥</span>
                         Karyawan
                     </a>
-                    <a href="{{ route('departemen.index') }}" class="menu-btn">
+                    <a href="{{ route('departemen.index.web') }}" class="menu-btn">
                         <span class="menu-icon">🏢</span>
                         Departemen
                     </a>
-                    <a href="{{ route('jenis-pelanggaran.index') }}" class="menu-btn">
+                    <a href="{{ route('jenis-pelanggaran.index.web') }}" class="menu-btn">
                         <span class="menu-icon">⚠️</span>
                         Jenis Pelanggaran
                     </a>
@@ -301,7 +301,7 @@
                         <span class="menu-icon">📋</span>
                         Pelanggaran
                     </a>
-                    <a href="{{ route('sanksi.index') }}" class="menu-btn">
+                    <a href="{{ route('sanksi.index.web') }}" class="menu-btn">
                         <span class="menu-icon">⚖️</span>
                         Sanksi
                     </a>
@@ -331,7 +331,7 @@
                         <span class="menu-icon">📋</span>
                         Pelanggaran
                     </a>
-                    <a href="{{ route('sanksi.index') }}" class="menu-btn">
+                    <a href="{{ route('sanksi.index.web') }}" class="menu-btn">
                         <span class="menu-icon">⚖️</span>
                         Sanksi
                     </a>
@@ -369,8 +369,8 @@
                     @foreach($recentPelanggaran as $item)
                         <li>
                             {{ $item->jenisPelanggaran->nama_jenis_pelanggaran ?? 'Pelanggaran' }} pada {{ date('d M Y', strtotime($item->tanggal_pelanggaran)) }}
-                            @if($item->sanksi)
-                                - Sanksi: {{ $item->sanksi->jenis_sanksi }}
+                            @if($item->sanksi->count() > 0)
+                                - Sanksi: {{ $item->sanksi->first()->jenis_sanksi }}
                             @endif
                         </li>
                     @endforeach

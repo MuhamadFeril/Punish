@@ -129,7 +129,7 @@
         <p class="form-subtitle">{{ isset($sanksi) ? 'Perbarui detail sanksi karyawan' : 'Tambahkan sanksi untuk pelanggaran yang sudah dilaporkan' }}</p>
     </div>
 
-    <form action="{{ isset($sanksi) ? route('sanksi.update.admin', $sanksi->id) : route('sanksi.store.admin') }}" method="POST">
+    <form action="{{ isset($sanksi) ? route('sanksi.update.web', $sanksi->id) : route('sanksi.store.web') }}" method="POST">
         @csrf
         @if(isset($sanksi))
             @method('PUT')
@@ -175,18 +175,6 @@
         </div>
 
         <div class="form-group">
-            <label for="status" class="form-label">Status *</label>
-            <select id="status" name="status" class="form-select" required>
-                <option value="">Pilih status</option>
-                <option value="aktif" {{ old('status', $sanksi->status ?? '') === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="selesai" {{ old('status', $sanksi->status ?? '') === 'selesai' ? 'selected' : '' }}>Selesai</option>
-            </select>
-            @error('status')
-                <div class="form-error">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
             <label for="keterangan_sanksi" class="form-label">Keterangan Sanksi</label>
             <textarea id="keterangan_sanksi" name="keterangan_sanksi" class="form-textarea">{{ old('keterangan_sanksi', $sanksi->keterangan_sanksi ?? '') }}</textarea>
             @error('keterangan_sanksi')
@@ -196,7 +184,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-primary">{{ isset($sanksi) ? 'Update Sanksi' : 'Simpan Sanksi' }}</button>
-            <a href="{{ route('sanksi.index') }}" class="btn-secondary">Batal</a>
+            <a href="{{ route('sanksi.index.web') }}" class="btn-secondary">Batal</a>
         </div>
     </form>
 </div>

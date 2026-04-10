@@ -2,230 +2,299 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Surat Peringatan</title>
-
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=EB+Garamond:wght@400;500;600&display=swap');
-
-:root {
-  --ink: #1a1208;
-  --soft: #5a4a3a;
-  --accent: #7a1c1c;
-  --paper: #faf7f0;
-}
-
-/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* PAGE */
 body {
-  background: #e6dcc8;
-  font-family: 'EB Garamond', serif;
-  color: var(--ink);
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.5;
 }
 
-.paper {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 28mm 24mm;
-  background: var(--paper);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+.page {
+  width: 297mm;
+  height: 210mm;
+  padding: 15mm;
+  background: white;
+  margin: 0 auto;
+  position: relative;
 }
 
-/* HEADER */
-.kop {
+.header {
   text-align: center;
-  border-bottom: 3px double #c9b79c;
-  padding-bottom: 14px;
-  margin-bottom: 20px;
+  border-bottom: 3px solid #000;
+  padding-bottom: 10mm;
+  margin-bottom: 10mm;
 }
 
-.kop h1 {
-  font-family: 'Libre Baskerville', serif;
-  font-size: 20px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--accent);
+.header h1 {
+  font-size: 18px;
+  margin-bottom: 2mm;
 }
 
-.kop p {
-  font-size: 13px;
-  color: var(--soft);
-  margin-top: 4px;
+.header p {
+  font-size: 11px;
+  margin: 1mm 0;
 }
 
-/* TITLE */
 .title {
   text-align: center;
-  margin: 18px 0 8px;
+  margin: 15mm 0 5mm;
 }
 
 .title h2 {
-  font-family: 'Libre Baskerville', serif;
-  font-size: 18px;
+  font-size: 16px;
   text-decoration: underline;
-  text-underline-offset: 5px;
+  color: #c0392b;
 }
 
-.nomor {
+.number {
   text-align: center;
-  font-size: 13px;
-  color: var(--soft);
-  margin-bottom: 18px;
+  font-size: 12px;
+  margin-bottom: 10mm;
+  color: #666;
 }
 
-/* TEXT */
-.text {
-  font-size: 15px;
-  line-height: 1.75;
+.content {
+  font-size: 12px;
+  margin: 10mm 0;
+}
+
+.section {
+  margin: 10mm 0;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 12px;
+  background: #f0f0f0;
+  padding: 3mm 5mm;
+  margin-bottom: 5mm;
+  border-left: 4px solid #2c3e50;
+}
+
+.info-box {
+  border: 1px solid #ddd;
+  padding: 8mm;
+  margin-bottom: 10mm;
+  background: #fafafa;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 3mm;
+  font-size: 11px;
+}
+
+.info-label {
+  width: 35mm;
+  font-weight: bold;
+}
+
+.info-value {
+  flex: 1;
+}
+
+.violation-box {
+  border: 2px solid #c0392b;
+  padding: 8mm;
+  margin: 10mm 0;
+  background: #fef5f5;
+}
+
+.violation-box .section-title {
+  background: #c0392b;
+  color: white;
+  border-left: none;
+}
+
+.sanction-box {
+  border: 2px solid #f39c12;
+  padding: 8mm;
+  margin: 10mm 0;
+  background: #fffbf0;
+}
+
+.sanction-box .section-title {
+  background: #f39c12;
+  color: white;
+  border-left: none;
+}
+
+.closing {
+  margin: 10mm 0;
   text-align: justify;
-  margin-bottom: 14px;
+  font-size: 11px;
 }
 
-/* DATA */
-.data {
-  margin: 10px 0;
-}
-
-.data strong {
-  display: inline-block;
-  width: 120px;
-}
-
-/* BOX */
-.box {
-  border-left: 4px solid var(--accent);
-  background: rgba(122,28,28,0.05);
-  padding: 12px 16px;
-  margin: 14px 0;
-}
-
-/* FOOTER */
 .footer {
-  margin-top: 40px;
+  margin-top: 20mm;
 }
 
-.date {
+.signature-date {
   text-align: right;
-  margin-bottom: 40px;
+  margin-bottom: 10mm;
+  font-size: 11px;
 }
 
-/* SIGN */
-.sign {
+.signatures {
   display: flex;
   justify-content: space-between;
+  margin-top: 15mm;
 }
 
-.sign-box {
-  width: 45%;
+.sig-block {
+  width: 40%;
   text-align: center;
+  font-size: 11px;
 }
 
-.sign-line {
-  border-top: 1px solid var(--ink);
-  margin: 50px auto 6px;
-  width: 70%;
+.sig-title {
+  font-weight: bold;
+  margin-bottom: 15mm;
 }
 
-.sign-name {
-  font-weight: 600;
+.sig-line {
+  border-top: 1px solid #000;
+  margin: 0 auto 3mm;
+  width: 90%;
+  height: 15mm;
 }
 
-.sign-role {
-  font-size: 13px;
-  color: var(--soft);
+.sig-name {
+  font-weight: bold;
 }
 
-/* PRINT */
+.note {
+  margin-top: 10mm;
+  padding: 5mm;
+  background: #ecf0f1;
+  font-size: 10px;
+  border-left: 3mm solid #95a5a6;
+  font-style: italic;
+}
+
 @media print {
-  body {
-    background: white;
-  }
-  .paper {
-    box-shadow: none;
-    margin: 0;
-  }
+  body { margin: 0; }
+  .page { margin: 0; box-shadow: none; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="paper">
+<div class="page">
 
-  <div class="kop">
-    <h1>PT. Nama Perusahaan</h1>
-    <p>Divisi Sumber Daya Manusia</p>
-    <p>Jl. Contoh Raya No.123 | (021) 000000 | sdm@perusahaan.com</p>
+  <div class="header">
+    <h1>SURAT PERINGATAN RESMI</h1>
+    <p>Departemen Sumber Daya Manusia</p>
+    <p>Sistem Manajemen Pelanggaran Karyawan</p>
   </div>
 
   <div class="title">
     <h2>SURAT PERINGATAN</h2>
   </div>
 
-  <div class="nomor">
-    Nomor: SP/{{ date('Y') }} / {{ str_pad($pelanggaran->id ?? 0,4,'0',STR_PAD_LEFT) }}
+  <div class="number">
+    Nomor: SP/{{ date('Y') }}/{{ str_pad($pelanggaran->id ?? 0, 5, '0', STR_PAD_LEFT) }}
   </div>
 
-  <p class="text">
-    Yang bertanda tangan di bawah ini dari Divisi SDM menyatakan bahwa:
-  </p>
-
-  <div class="data text">
-    <p><strong>Nama</strong>: {{ $pelanggaran->karyawan->nama_karyawan ?? '-' }}</p>
-    <p><strong>Jabatan</strong>: {{ $pelanggaran->karyawan->jabatan_karyawan ?? '-' }}</p>
-    <p><strong>Departemen</strong>: {{ $pelanggaran->karyawan->departemen->nama_departemen ?? '-' }}</p>
-    <p><strong>Status</strong>: {{ $pelanggaran->karyawan->status ?? '-' }}</p>
+  <div class="content">
+    <p>Dengan ini kami sampaikan bahwa telah terjadi pelanggaran yang dilakukan oleh seorang karyawan kami sesuai dengan peraturan perusahaan.</p>
   </div>
 
-  <p class="text">
-    Telah melakukan pelanggaran berupa 
-    <strong>{{ $pelanggaran->jenisPelanggaran->nama_pelanggaran ?? '-' }}</strong> 
-    (Tingkat: {{ $pelanggaran->jenisPelanggaran->tingkat_pelanggaran ?? '-' }}) 
-    pada tanggal 
-    <strong>
-      {{ \Carbon\Carbon::parse($pelanggaran->tanggal_pelanggaran ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}
-    </strong>.
-  </p>
-
-  <div class="box">
-    <p class="text">
-      Deskripsi: {{ $pelanggaran->jenisPelanggaran->deskripsi_pelanggaran ?? '-' }}
-    </p>
-    <p class="text">
-      Sanksi: <strong>{{ $sanksi->jenis_sanksi }}</strong>
-    </p>
+  <div class="info-box">
+    <div class="section-title">DATA KARYAWAN</div>
+    <div class="info-row">
+      <div class="info-label">Nama</div>
+      <div class="info-value">: {{ $pelanggaran->karyawan->nama_karyawan ?? '-' }}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Jabatan</div>
+      <div class="info-value">: {{ $pelanggaran->karyawan->jabatan_karyawan ?? '-' }}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Departemen</div>
+      <div class="info-value">: {{ $pelanggaran->karyawan->departemen->nama_departemen ?? '-' }}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Status</div>
+      <div class="info-value">: {{ ucfirst($pelanggaran->karyawan->status ?? '-') }}</div>
+    </div>
   </div>
 
-  <p class="text">
-    Surat ini dibuat sebagai bentuk peringatan dan akan menjadi bagian dari catatan kepegawaian.
-  </p>
+  <div class="violation-box">
+    <div class="section-title">PELANGGARAN</div>
+    <div class="info-row">
+      <div class="info-label">Jenis</div>
+      <div class="info-value">: <strong>{{ $pelanggaran->jenisPelanggaran->nama_pelanggaran ?? '-' }}</strong></div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Tingkat</div>
+      <div class="info-value">: <strong style="text-transform: uppercase;">{{ $pelanggaran->jenisPelanggaran->tingkat_pelanggaran ?? '-' }}</strong></div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Tanggal</div>
+      <div class="info-value">: {{ \Carbon\Carbon::parse($pelanggaran->tanggal_pelanggaran ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</div>
+    </div>
+    <div style="margin-top: 5mm; padding-top: 5mm; border-top: 1px solid #c0392b;">
+      <strong>Keterangan:</strong><br>
+      {{ $pelanggaran->keterangan_pelanggaran ?? 'Tidak ada keterangan' }}
+    </div>
+  </div>
+
+  <div class="sanction-box">
+    <div class="section-title">SANKSI YANG DIBERIKAN</div>
+    <div class="info-row">
+      <div class="info-label">Jenis Sanksi</div>
+      <div class="info-value">: <strong>{{ $sanksi->jenis_sanksi ?? '-' }}</strong></div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Tanggal Berlaku</div>
+      <div class="info-value">: {{ \Carbon\Carbon::parse($sanksi->tanggal_sanksi ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</div>
+    </div>
+    <div class="info-row">
+      <div class="info-label">Status</div>
+      <div class="info-value">: <strong>{{ ucfirst($sanksi->status ?? '-') }}</strong></div>
+    </div>
+    @if($sanksi->keterangan_sanksi)
+    <div style="margin-top: 5mm; padding-top: 5mm; border-top: 1px solid #f39c12;">
+      <strong>Catatan:</strong><br>
+      {{ $sanksi->keterangan_sanksi }}
+    </div>
+    @endif
+  </div>
+
+  <div class="closing">
+    Surat peringatan ini diterbitkan sebagai dokumen resmi dan akan menjadi bagian dari catatan kepegawaian karyawan. Kami mengharapkan perbaikan perilaku dan kepatuhan yang lebih baik terhadap peraturan perusahaan.
+  </div>
 
   <div class="footer">
-    <p class="date">
+    <div class="signature-date">
       Jakarta, {{ now()->isoFormat('D MMMM YYYY') }}
-    </p>
+    </div>
 
-    <div class="sign">
-      <div class="sign-box">
-        <p>HRD</p>
-        <div class="sign-line"></div>
-        <p class="sign-name">{{ $pimpinan ?? 'Kepala SDM' }}</p>
-        <p class="sign-role">Kepala SDM</p>
+    <div class="signatures">
+      <div class="sig-block">
+        <div class="sig-title">Kepala SDM</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">_______________________</div>
       </div>
 
-      <div class="sign-box">
-        <p>Karyawan</p>
-        <div class="sign-line"></div>
-        <p class="sign-name">{{ $pelanggaran->karyawan->nama_karyawan ?? '__________' }}</p>
-        <p class="sign-role">{{ $pelanggaran->karyawan->jabatan_karyawan ?? '' }}</p>
+      <div class="sig-block">
+        <div class="sig-title">Karyawan</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">{{ $pelanggaran->karyawan->nama_karyawan ?? '_______________________' }}</div>
       </div>
     </div>
+  </div>
+
+  <div class="note">
+    <strong>Catatan:</strong> Dokumen ini adalah surat peringatan resmi. Pengajuan banding dapat dilakukan dalam waktu 5 hari kerja setelah menerima surat ini.
   </div>
 
 </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\PelanggaranNotification;
 use App\Models\Pelanggaran;
 use App\Models\Karyawan;
 use App\Models\Jenispelanggaran;
@@ -45,7 +47,14 @@ class PelanggaranController extends Controller
             $validated['bukti_pelanggaran'] = $request->file('bukti_pelanggaran')->store('pelanggaran', 'public');
         }
 
-        Pelanggaran::create($validated);
+        $pelanggaran = Pelanggaran::create($validated);
+        $pelanggaran->load('karyawan');
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new PelanggaranNotification($pelanggaran));
+        }
+
         return redirect('pelanggaran')->with('success', 'Pelanggaran berhasil dilaporkan');
     }
 

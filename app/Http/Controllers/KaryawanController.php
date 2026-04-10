@@ -9,9 +9,18 @@ use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $karyawan = Karyawan::with('departemen')->paginate(15);
+        $query = Karyawan::with('departemen');
+        
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where('nama_karyawan', 'like', "%{$search}%")
+                  ->orWhere('email_karyawan', 'like', "%{$search}%");
+        }
+        
+        $karyawan = $query->paginate(15);
         return view('karyawan.index', compact('karyawan'));
     }
 

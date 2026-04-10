@@ -30,6 +30,12 @@ class JenisPelanggaranController extends Controller
         return redirect('jenis-pelanggaran')->with('success', 'Jenis pelanggaran berhasil ditambahkan');
     }
 
+    public function show(Jenispelanggaran $jenisPelanggaran)
+    {
+        $jenisPelanggaran->load('pelanggaran');
+        return view('jenis-pelanggaran.show', compact('jenisPelanggaran'));
+    }
+
     public function edit(Jenispelanggaran $jenisPelanggaran)
     {
         return view('jenis-pelanggaran.form', compact('jenisPelanggaran'));

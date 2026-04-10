@@ -329,6 +329,7 @@
                         id="bukti_pelanggaran" 
                         name="bukti_pelanggaran" 
                         accept="image/*"
+                        onchange="previewFile(this)"
                     >
                     <label for="bukti_pelanggaran" class="file-input-label">
                         📁 Klik untuk memilih bukti atau drag & drop
@@ -337,8 +338,11 @@
                 @if(isset($pelanggaran) && $pelanggaran->bukti_pelanggaran)
                     <div class="current-file">
                         ✓ File saat ini: {{ basename($pelanggaran->bukti_pelanggaran) }}
+                        <br>
+                        <img src="{{ asset('storage/' . $pelanggaran->bukti_pelanggaran) }}" alt="Preview" style="max-width: 100%; height: auto; margin-top: 8px; border-radius: 6px; max-height: 200px;">
                     </div>
                 @endif
+                <div id="previewContainer" style="margin-top: 12px;"></div>
                 <div class="form-help">Format: JPG, PNG, GIF | Ukuran maksimal: 2MB</div>
                 @error('bukti_pelanggaran')
                     <div class="form-error">✗ {{ $message }}</div>
@@ -358,6 +362,27 @@
 </div>
 
 <script>
+    // File preview function
+    function previewFile(input) {
+        const previewContainer = document.getElementById('previewContainer');
+        previewContainer.innerHTML = '';
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100%';
+                img.style.height = 'auto';
+                img.style.marginTop = '12px';
+                img.style.borderRadius = '6px';
+                img.style.maxHeight = '200px';
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     // Drag and drop for file input
     const fileInput = document.getElementById('bukti_pelanggaran');
     const fileLabel = document.querySelector('.file-input-label');
@@ -389,6 +414,7 @@
         const dt = e.dataTransfer;
         const files = dt.files;
         fileInput.files = files;
+        previewFile(fileInput);
     });
 </script>
 @endsection
