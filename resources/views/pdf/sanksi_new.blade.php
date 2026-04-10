@@ -212,29 +212,34 @@ body {
 }
 
 .signatures {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20mm;
-}
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12mm;
+    margin-top: 20mm;
+  }
 
-.signature-block {
-  width: 45%;
-  text-align: center;
-}
+  .signature-block {
+    width: 48%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 55mm;
+  }
 
-.signature-title {
-  font-size: 10pt;
-  font-weight: bold;
-  margin-bottom: 20mm;
-  color: #2c3e50;
-}
+  .signature-title {
+    font-size: 10pt;
+    font-weight: bold;
+    margin-bottom: 6mm;
+    color: #2c3e50;
+  }
 
-.signature-line {
-  border-top: 1px solid #333;
-  margin: 0 auto 3mm;
-  width: 80%;
-}
-
+  .signature-line {
+    border-top: 1px solid #333;
+    margin: 0 auto 3mm;
+    width: 80%;
+  }
 .signature-name {
   font-weight: 600;
   font-size: 10pt;

@@ -145,45 +145,33 @@ body {
 .signatures {
   display: flex;
   justify-content: space-between;
-  margin-top: 15mm;
-}
+    align-items: flex-end;
+    margin-top: 15mm;
+    gap: 10mm;
+  }
 
-.sig-block {
-  width: 40%;
-  text-align: center;
-  font-size: 11px;
-}
+  .sig-block {
+    width: 48%;
+    text-align: center;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 50mm;
+  }
 
-.sig-title {
-  font-weight: bold;
-  margin-bottom: 15mm;
-}
+  .sig-title {
+    font-weight: bold;
+    margin-bottom: 6mm;
+  }
 
-.sig-line {
-  border-top: 1px solid #000;
-  margin: 0 auto 3mm;
-  width: 90%;
-  height: 15mm;
-}
-
-.sig-name {
-  font-weight: bold;
-}
-
-.note {
-  margin-top: 10mm;
-  padding: 5mm;
-  background: #ecf0f1;
-  font-size: 10px;
-  border-left: 3mm solid #95a5a6;
-  font-style: italic;
-}
-
-@media print {
-  body { margin: 0; }
-  .page { margin: 0; box-shadow: none; }
-}
-</style>
+  .sig-line {
+    border-top: 1px solid #000;
+    margin: 0 auto 3mm;
+    width: 90%;
+    height: 0;
+  }
+  </style>
 </head>
 <body>
 
@@ -280,7 +268,7 @@ body {
 
     <div class="signatures">
       <div class="sig-block">
-        <div class="sig-title">Kepala SDM</div>
+        <div class="sig-title">HRD </div>
         <div class="sig-line"></div>
         <div class="sig-name">_______________________</div>
       </div>
