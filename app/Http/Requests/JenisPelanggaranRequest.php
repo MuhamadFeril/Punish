@@ -13,6 +13,7 @@ class JenisPelanggaranRequest extends FormRequest
     public function rules()
     {
         return [
+            'kategori_id' => 'required|exists:table_category,id',
             'nama_pelanggaran' => 'required|string|max:255|unique:jenis_pelanggaran,nama_pelanggaran',
             'tingkat_pelanggaran' => 'required|in:ringan,sedang,berat',
             'deskripsi_pelanggaran' => 'nullable|string',
