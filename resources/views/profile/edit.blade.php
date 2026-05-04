@@ -165,9 +165,9 @@
 
         <div class="form-group">
             <label for="photo" class="form-label">📸 Foto Profil</label>
-            @if($user->photo)
+            @if($user->profile_photo_url)
                 <div style="margin-bottom: 12px;">
-                    <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto Profil" style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover;">
+                    <img src="{{ $user->profile_photo_url }}" alt="Foto Profil" style="width: 100px; height: 100px; border-radius: 10px; object-fit: cover; border: 2px solid #e0e7ff;">
                 </div>
             @endif
             <input 

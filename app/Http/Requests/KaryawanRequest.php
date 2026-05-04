@@ -31,7 +31,7 @@ class KaryawanRequest extends FormRequest
     public function messages()
     {
         return [
-            'nama_karyawan.required' => 'Nama karyawan harus diisi.',
+            'nama_karyawa   n.required' => 'Nama karyawan harus diisi.',
             'jabatan_karyawan.required' => 'Jabatan karyawan harus diisi.',
             'alamat_karyawan.required' => 'Alamat karyawan harus diisi.',
             'email_karyawan.required' => 'Email karyawan harus diisi.',

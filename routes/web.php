@@ -12,7 +12,7 @@ use App\Http\Controllers\SanksiController;
 
 // Home
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 });
 
 // ===== AUTH ROUTES (Public - Guest Only) =====
@@ -33,31 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('profile/photo', [ProfileController::class, 'photo'])->name('profile.photo');
 
     // ===== ALL AUTHENTICATED CAN VIEW (index, show) =====
     Route::get('karyawan', [KaryawanController::class, 'index'])->name('karyawan.index.web');
-    Route::get('karyawan/{karyawan}', [KaryawanController::class, 'show'])->name('karyawan.show.web');
-    
     Route::get('departemen', [DepartemenController::class, 'index'])->name('departemen.index.web');
-    Route::get('departemen/{departemen}', [DepartemenController::class, 'show'])->name('departemen.show.web');
-    
     Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index'])->name('jenis-pelanggaran.index.web');
-    Route::get('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'show'])->name('jenis-pelanggaran.show.web');
-    
     Route::get('sanksi', [SanksiController::class, 'index'])->name('sanksi.index.web');
-    Route::get('sanksi/{sanksi}', [SanksiController::class, 'show'])->name('sanksi.show.web');
-    Route::get('sanksi/{sanksi}/download', [SanksiController::class, 'downloadPdf'])->name('sanksi.download');
-
-    // ===== PELANGGARAN - ALL AUTHENTICATED CAN CRUD =====
-    Route::resource('pelanggaran', PelanggaranController::class)->names([
-        'index' => 'pelanggaran.index.web',
-        'create' => 'pelanggaran.create.web',
-        'store' => 'pelanggaran.store.web',
-        'show' => 'pelanggaran.show.web',
-        'edit' => 'pelanggaran.edit.web',
-        'update' => 'pelanggaran.update.web',
-        'destroy' => 'pelanggaran.destroy.web'
-    ]);
 
     // ===== ADMIN ONLY ROUTES =====
     Route::middleware('role:admin')->group(function () {
@@ -89,4 +71,21 @@ Route::middleware('auth')->group(function () {
         Route::put('sanksi/{sanksi}', [SanksiController::class, 'update'])->name('sanksi.update.web');
         Route::delete('sanksi/{sanksi}', [SanksiController::class, 'destroy'])->name('sanksi.destroy.web');
     });
+
+    Route::get('karyawan/{karyawan}', [KaryawanController::class, 'show'])->name('karyawan.show.web');
+    Route::get('departemen/{departemen}', [DepartemenController::class, 'show'])->name('departemen.show.web');
+    Route::get('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'show'])->name('jenis-pelanggaran.show.web');
+    Route::get('sanksi/{sanksi}', [SanksiController::class, 'show'])->name('sanksi.show.web');
+    Route::get('sanksi/{sanksi}/download', [SanksiController::class, 'downloadPdf'])->name('sanksi.download');
+
+    // ===== PELANGGARAN - ALL AUTHENTICATED CAN CRUD =====
+    Route::resource('pelanggaran', PelanggaranController::class)->names([
+        'index' => 'pelanggaran.index.web',
+        'create' => 'pelanggaran.create.web',
+        'store' => 'pelanggaran.store.web',
+        'show' => 'pelanggaran.show.web',
+        'edit' => 'pelanggaran.edit.web',
+        'update' => 'pelanggaran.update.web',
+        'destroy' => 'pelanggaran.destroy.web'
+    ]);
 });

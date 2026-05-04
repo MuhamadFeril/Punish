@@ -31,4 +31,19 @@ class KategoriHandler
     {
         return $this->kategoriRepostory->delete($id);
     }
+
+    public function trashed()
+    {
+        return $this->kategoriRepostory->trashed();
+    }
+
+    public function restore($id)
+    {
+        return $this->kategoriRepostory->restore($id);
+    }
+
+    public function forceDelete($id)
+    {
+        return $this->kategoriRepostory->forceDelete($id);
+    }
 }

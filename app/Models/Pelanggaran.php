@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Karyawan;
 use App\Models\JenisPelanggaran;
+use App\Models\User;
 
 class Pelanggaran extends Model
 {
@@ -19,6 +20,7 @@ class Pelanggaran extends Model
         'tanggal_pelanggaran',
         'keterangan_pelanggaran',
         'bukti_pelanggaran',
+        'reported_by',
     ];
 
     public function karyawan()
@@ -34,5 +36,10 @@ class Pelanggaran extends Model
     public function sanksi()
     {
         return $this->hasMany(Sanksi::class, 'pelanggaran_id');
+    }
+
+    public function reportedBy()
+    {
+        return $this->belongsTo(User::class, 'reported_by');
     }
 }

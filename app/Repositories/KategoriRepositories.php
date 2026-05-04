@@ -39,4 +39,25 @@ class KategoriRepositories implements KategoriInterface
         $kategori->delete();
         return true;
     }
+
+    public function trashed()
+    {
+        return Kategori::onlyTrashed();
+    }
+
+    public function restore($id)
+    {
+        $kategori = Kategori::withTrashed()->findOrFail($id);
+        if ($kategori->trashed()) {
+            $kategori->restore();
+        }
+        return $kategori;
+    }
+
+    public function forceDelete($id)
+    {
+        $kategori = Kategori::withTrashed()->findOrFail($id);
+        $kategori->forceDelete();
+        return true;
+    }
 }

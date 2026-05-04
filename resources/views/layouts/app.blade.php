@@ -1,599 +1,719 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ $title ?? 'Punish - Sistem Manajemen Pelanggaran' }}</title>
-        
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
-        
-        <!-- Styles -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ config('app.name', 'Punish') }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ============================================
+           NAVBAR ADMIN - Dark Professional
+        ============================================ */
+        .navbar-admin {
+            background: #1a1d2e;
+            padding: 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-admin .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-admin .brand span {
+            color: #7c6fff;
+        }
+
+        .navbar-admin .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .navbar-admin .nav-links a {
+            color: #9aa0b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .navbar-admin .nav-links a:hover,
+        .navbar-admin .nav-links a.active {
+            color: #fff;
+            background: rgba(124, 111, 255, 0.18);
+        }
+
+        .navbar-admin .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-admin .badge-role {
+            background: rgba(124, 111, 255, 0.15);
+            color: #a99fff;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(124, 111, 255, 0.35);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-admin .user-name {
+            color: #d0d4e8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .navbar-admin .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2px solid rgba(124, 111, 255, 0.5);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #7c6fff 0%, #4f46e5 100%);
+        }
+
+        .navbar-admin .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .navbar-admin .btn-profile {
+            background: rgba(255,255,255,0.07);
+            color: #d0d4e8;
+            border: 1px solid rgba(255,255,255,0.12);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .navbar-admin .btn-profile:hover {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .navbar-admin .btn-logout {
+            background: rgba(220, 53, 69, 0.12);
+            color: #ff6b7a;
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar-admin .btn-logout:hover {
+            background: rgba(220, 53, 69, 0.22);
+            color: #ff8a95;
+        }
+
+        .navbar-admin .profile-dropdown,
+        .navbar-user .profile-dropdown {
+            position: relative;
+        }
+
+        .navbar-admin .profile-button,
+        .navbar-user .profile-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: inherit;
+            padding: 6px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+        }
+
+        .navbar-admin .profile-button:hover,
+        .navbar-user .profile-button:hover {
+            background: rgba(255,255,255,0.14);
+            transform: translateY(-1px);
+        }
+
+        .navbar-admin .profile-button .dropdown-icon,
+        .navbar-user .profile-button .dropdown-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .navbar-admin .profile-menu,
+        .navbar-user .profile-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 12px);
+            min-width: 180px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 14px;
+            box-shadow: 0 24px 58px rgba(15, 23, 42, 0.14);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+            z-index: 10;
+        }
+
+        .navbar-admin .profile-dropdown:hover .profile-menu,
+        .navbar-user .profile-dropdown:hover .profile-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .navbar-admin .menu-item,
+        .navbar-user .menu-item {
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            color: #1f2937;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            background: transparent;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .navbar-admin .menu-item:hover,
+        .navbar-user .menu-item:hover {
+            background: #f8fafc;
+        }
+
+        .navbar-admin .menu-divider,
+        .navbar-user .menu-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 4px 0;
+        }
+
+        .navbar-admin .profile-dropdown form,
+        .navbar-user .profile-dropdown form {
+            margin: 0;
+        }
+
+        /* ============================================
+           NAVBAR USER - Light & Clean
+        ============================================ */
+        .navbar-user {
+            background: #ffffff;
+            padding: 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: 0 1px 0 #e5e7eb, 0 2px 8px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-user .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-user .brand span {
+            color: #6366f1;
+        }
+
+        .navbar-user .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .navbar-user .nav-links a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .navbar-user .nav-links a:hover,
+        .navbar-user .nav-links a.active {
+            color: #6366f1;
+            background: #f0f0ff;
+        }
+
+        .navbar-user .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-user .badge-role {
+            background: #f0fdf4;
+            color: #16a34a;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid #bbf7d0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-user .user-name {
+            color: #374151;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .navbar-user .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2px solid #e0e0ff;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+        }
+
+        .navbar-user .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .navbar-user .btn-profile {
+            background: #f5f5ff;
+            color: #6366f1;
+            border: 1px solid #c7d2fe;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .navbar-user .btn-profile:hover {
+            background: #ede9fe;
+            border-color: #a5b4fc;
+        }
+
+        .navbar-user .btn-logout {
+            background: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #fecdd3;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 5px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .navbar-user .btn-logout:hover {
+            background: #ffe4e6;
+        }
+
+        /* ============================================
+           NAVBAR GUEST - Minimal
+        ============================================ */
+        .navbar-guest {
+            background: #ffffff;
+            padding: 0 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            box-shadow: 0 1px 0 #e5e7eb;
+        }
+
+        .navbar-guest .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+        }
+
+        .navbar-guest .brand span {
+            color: #6366f1;
+        }
+
+        .navbar-guest .btn-login {
+            background: #6366f1;
+            color: #fff;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 7px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+
+        .navbar-guest .btn-login:hover {
+            background: #4f46e5;
+        }
+
+        .navbar-guest .btn-register {
+            background: transparent;
+            color: #6366f1;
+            border: 1.5px solid #6366f1;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .navbar-guest .btn-register:hover {
+            background: #f5f5ff;
+        }
+
+        /* ============================================
+           CONTENT & FOOTER
+        ============================================ */
+        .main-content {
+            flex: 1;
+            padding: 28px;
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+            padding: 24px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+
+        .text-muted {
+            color: #6b7280;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        th {
+            font-size: 13px;
+            font-weight: 700;
+            color: #4b5563;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .site-footer {
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .site-footer strong {
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+
+    {{-- ===== NAVBAR ADMIN ===== --}}
+    @auth
+        @if(auth()->user()->role === 'admin')
+        <nav class="navbar-admin">
+            {{-- Brand --}}
+            <a href="{{ route('dashboard') }}" class="brand"><span>Punish</span> Admin</a>
+
+            {{-- Menu Admin: akses penuh semua fitur --}}
+            <div class="nav-links">
+                <a href="{{ route('dashboard') }}"
+                   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    Dashboard
+                </a>
+                <a href="{{ route('karyawan.index.web') }}"
+                   class="{{ request()->routeIs('karyawan.*') ? 'active' : '' }}">
+                    Karyawan
+                </a>
+                <a href="{{ route('departemen.index.web') }}"
+                   class="{{ request()->routeIs('departemen.*') ? 'active' : '' }}">
+                    Departemen
+                </a>
+                <a href="{{ route('jenis-pelanggaran.index.web') }}"
+                   class="{{ request()->routeIs('jenis-pelanggaran.*') ? 'active' : '' }}">
+                    Jenis Pelanggaran
+                </a>
+                <a href="{{ route('pelanggaran.index.web') }}"
+                   class="{{ request()->routeIs('pelanggaran.*') ? 'active' : '' }}">
+                    Pelanggaran
+                </a>
+                <a href="{{ route('sanksi.index.web') }}"
+                   class="{{ request()->routeIs('sanksi.*') ? 'active' : '' }}">
+                    Sanksi
+                </a>
+            </div>
+
+            {{-- Right: badge, nama, avatar, tombol --}}
+            <div class="nav-right">
+                <span class="badge-role">Admin</span>
+                <span class="user-name">{{ auth()->user()->name }}</span>
+                <div class="profile-dropdown">
+                    <button type="button" class="profile-button">
+                        <div class="avatar" aria-label="Avatar">
+                            @if(auth()->user()->profile_photo_url)
+                                <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar">
+                            @else
+                                {{ auth()->user()->initials }}
+                            @endif
+                        </div>
+                        <span>{{ auth()->user()->name }}</span>
+                        <span class="dropdown-icon">▾</span>
+                    </button>
+                    <div class="profile-menu">
+                        <a href="{{ route('profile.edit') }}" class="menu-item">Profile</a>
+                        <div class="menu-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="menu-item">Sign out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        {{-- ===== NAVBAR USER ===== --}}
         @else
-            <style>
-                * { 
-                    margin: 0; 
-                    padding: 0; 
-                    box-sizing: border-box; 
-                }
-                
-                body { 
-                    font-family: 'Inter', 'Instrument Sans', sans-serif; 
-                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                    background-attachment: fixed;
-                    color: #1f2937; 
-                    transition: all 0.3s ease;
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(10px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                
-                @keyframes slideInLeft {
-                    from { opacity: 0; transform: translateX(-20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                
-                @keyframes slideInRight {
-                    from { opacity: 0; transform: translateX(20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                }
-                
-                @keyframes bounce {
-                    0%, 100% { transform: translateY(0); }
-                    50% { transform: translateY(-5px); }
-                }
-                
-                main { animation: fadeIn 0.5s ease; }
-                
-                .container { 
-                    max-width: 1200px; 
-                    margin: 0 auto; 
-                    padding: 0 20px; 
-                }
-                
-                .btn { 
-                    padding: 10px 18px; 
-                    border: none;
-                    border-radius: 6px; 
-                    cursor: pointer; 
-                    text-decoration: none; 
-                    display: inline-block; 
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    font-weight: 500;
-                    font-size: 14px;
-                }
-                
-                .btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                }
-                
-                .btn-primary { 
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white; 
-                }
-                
-                .btn-primary:hover { 
-                    background: linear-gradient(135deg, #5568d3 0%, #6b3d8a 100%);
-                }
-                
-                .btn-secondary { 
-                    background-color: #e5e7eb; 
-                    color: #1f2937; 
-                    border: 1px solid #d1d5db;
-                }
-                
-                .btn-secondary:hover { 
-                    background-color: #d1d5db;
-                    border-color: #9ca3af;
-                }
-                
-                .btn-danger { 
-                    background: linear-gradient(135deg, #f93b1d 0%, #ea2e0d 100%);
-                    color: white; 
-                }
-                
-                .btn-danger:hover { 
-                    background: linear-gradient(135deg, #f52a0d 0%, #d11e00 100%);
-                }
-                
-                .btn-sm { 
-                    padding: 6px 12px; 
-                    font-size: 13px; 
-                }
-                
-                table { 
-                    width: 100%; 
-                    border-collapse: collapse; 
-                }
-                
-                th, td { 
-                    padding: 14px; 
-                    text-align: left; 
-                    border-bottom: 1px solid #e5e7eb; 
-                }
-                
-                th { 
-                    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-                    font-weight: 600; 
-                    color: #374151;
-                }
-                
-                tr { 
-                    transition: background-color 0.2s ease;
-                }
-                
-                tr:hover { 
-                    background-color: #f9fafb;
-                }
-                
-                input, select, textarea { 
-                    padding: 10px 12px; 
-                    border: 1px solid #d1d5db; 
-                    border-radius: 6px; 
-                    font-family: inherit; 
-                    font-size: 14px;
-                    transition: all 0.3s ease;
-                }
-                
-                input:focus, select:focus, textarea:focus { 
-                    outline: none; 
-                    border-color: #667eea;
-                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-                }
-                
-                .alert { 
-                    padding: 14px 16px; 
-                    border-radius: 8px; 
-                    margin-bottom: 16px;
-                    animation: slideInRight 0.4s ease;
-                    border-left: 4px solid;
-                    position: relative;
-                    cursor: pointer;
-                }
-                
-                .alert-success { 
-                    background-color: #d1fae5; 
-                    color: #065f46;
-                    border-left-color: #10b981;
-                }
-                
-                .alert-error { 
-                    background-color: #fee2e2; 
-                    color: #991b1b;
-                    border-left-color: #ef4444;
-                }
-                
-                .alert-info { 
-                    background-color: #dbeafe; 
-                    color: #1e40af;
-                    border-left-color: #3b82f6;
-                }
-                
-                .alert-warning { 
-                    background-color: #fef3c7; 
-                    color: #92400e;
-                    border-left-color: #f59e0b;
-                }
-                
-                /* Toast Notifications */
-                .toast-container {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    z-index: 9999;
-                    max-width: 400px;
-                }
-                
-                .toast {
-                    background: white;
-                    border-radius: 12px;
-                    padding: 16px 20px;
-                    margin-bottom: 12px;
-                    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-                    border-left: 4px solid;
-                    animation: slideInRight 0.4s ease, fadeOut 0.4s ease 3s forwards;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255,255,255,0.2);
-                }
-                
-                .toast.success {
-                    border-left-color: #10b981;
-                    background: linear-gradient(135deg, #d1fae5 0%, rgba(255,255,255,0.9) 100%);
-                }
-                
-                .toast.error {
-                    border-left-color: #ef4444;
-                    background: linear-gradient(135deg, #fee2e2 0%, rgba(255,255,255,0.9) 100%);
-                }
-                
-                .toast.info {
-                    border-left-color: #3b82f6;
-                    background: linear-gradient(135deg, #dbeafe 0%, rgba(255,255,255,0.9) 100%);
-                }
-                
-                .toast.warning {
-                    border-left-color: #f59e0b;
-                    background: linear-gradient(135deg, #fef3c7 0%, rgba(255,255,255,0.9) 100%);
-                }
-                
-                .toast-icon {
-                    font-size: 20px;
-                    flex-shrink: 0;
-                }
-                
-                .toast-content {
-                    flex: 1;
-                    font-size: 14px;
-                    font-weight: 500;
-                }
-                
-                .toast-close {
-                    background: none;
-                    border: none;
-                    font-size: 18px;
-                    cursor: pointer;
-                    opacity: 0.6;
-                    transition: opacity 0.2s ease;
-                    padding: 0;
-                    width: 20px;
-                    height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                
-                .toast-close:hover {
-                    opacity: 1;
-                }
-                
-                @keyframes fadeOut {
-                    to {
-                        opacity: 0;
-                        transform: translateX(100%);
-                    }
-                }
-                
-                .card { 
-                    background: white; 
-                    border: 1px solid #e5e7eb; 
-                    border-radius: 12px; 
-                    padding: 24px; 
-                    margin-bottom: 20px;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-                    transition: all 0.3s ease;
-                    animation: fadeIn 0.4s ease;
-                }
-                
-                .card:hover {
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                    border-color: #d1d5db;
-                }
-                
-                header { 
-                    background: white; 
-                    border-bottom: 1px solid #e5e7eb; 
-                    padding: 16px 0; 
-                    margin-bottom: 30px;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-                    animation: slideInLeft 0.4s ease;
-                }
-                
-                nav { 
-                    display: flex; 
-                    gap: 20px; 
-                    align-items: center; 
-                }
-                
-                nav a { 
-                    text-decoration: none; 
-                    color: #4b5563;
-                    font-weight: 500;
-                    transition: all 0.3s ease;
-                    position: relative;
-                }
-                
-                nav a::after {
-                    content: '';
-                    position: absolute;
-                    bottom: -5px;
-                    left: 0;
-                    width: 0;
-                    height: 2px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    transition: width 0.3s ease;
-                }
-                
-                nav a:hover {
-                    color: #667eea;
-                }
-                
-                nav a:hover::after {
-                    width: 100%;
-                }
-                
-                .sidebar { width: 250px; }
-                .main { flex: 1; }
-                .layout-wrapper { display: flex; gap: 20px; }
-                
-                .text-sm { font-size: 13px; }
-                .text-lg { font-size: 18px; }
-                .text-xl { font-size: 20px; }
-                .text-2xl { font-size: 28px; }
-                .text-3xl { font-size: 32px; }
-                .text-4xl { font-size: 40px; }
-                
-                .font-semibold { font-weight: 600; }
-                .font-bold { font-weight: 700; }
-                
-                .mb-4 { margin-bottom: 20px; }
-                .mb-6 { margin-bottom: 24px; }
-                .mt-4 { margin-top: 20px; }
-                .mt-6 { margin-top: 24px; }
-                
-                .gap-2 { gap: 8px; display: flex; }
-                .gap-4 { gap: 16px; display: flex; }
-                
-                .text-gray-600 { color: #4b5563; }
-                .text-gray-400 { color: #9ca3af; }
-                
-                .flex { display: flex; }
-                .justify-between { justify-content: space-between; }
-                .justify-center { justify-content: center; }
-                .items-center { align-items: center; }
-                
-                .w-full { width: 100%; }
-                .max-w-md { max-width: 28rem; }
-                .max-w-2xl { max-width: 42rem; }
-                
-                .min-h-screen { min-height: 100vh; }
-                .bg-white { background-color: white; }
-                
-                footer { 
-                    background: white; 
-                    border-top: 1px solid #e5e7eb; 
-                    margin-top: 60px; 
-                    padding-top: 40px;
-                    padding-bottom: 40px;
-                    text-align: center;
-                    color: #6b7280;
-                    font-size: 14px;
-                }
-                
-                .grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                    gap: 20px;
-                }
-                
-                .status-badge {
-                    padding: 6px 12px;
-                    border-radius: 999px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    display: inline-block;
-                }
-                
-                .status-aktif {
-                    background-color: #d1fae5;
-                    color: #065f46;
-                }
-                
-                .status-non-aktif {
-                    background-color: #fee2e2;
-                    color: #991b1b;
-                }
-                
-                .loading {
-                    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                
-                @media (max-width: 768px) {
-                    .container { padding: 0 16px; }
-                    nav { gap: 12px; font-size: 14px; }
-                    .btn { padding: 8px 14px; font-size: 13px; }
-                    table { font-size: 13px; }
-                    th, td { padding: 10px; }
-                }
-            </style>
+        <nav class="navbar-user">
+            {{-- Brand --}}
+            <a href="{{ route('dashboard') }}" class="brand"><span>Punish</span></a>
+
+            {{-- Menu User: hanya fitur yang diizinkan --}}
+            <div class="nav-links">
+                <a href="{{ route('dashboard') }}"
+                   class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    Dashboard
+                </a>
+                <a href="{{ route('pelanggaran.index.web') }}"
+                   class="{{ request()->routeIs('pelanggaran.*') ? 'active' : '' }}">
+                    Pelanggaran
+                </a>
+                <a href="{{ route('departemen.index.web') }}"
+                   class="{{ request()->routeIs('departemen.*') ? 'active' : '' }}">
+                    Departemen
+                </a>
+                <a href="{{ route('jenis-pelanggaran.index.web') }}"
+                   class="{{ request()->routeIs('jenis-pelanggaran.*') ? 'active' : '' }}">
+                    Jenis Pelanggaran
+                </a>
+                <a href="{{ route('sanksi.index.web') }}"
+                   class="{{ request()->routeIs('sanksi.*') ? 'active' : '' }}">
+                    Sanksi
+                </a>
+            </div>
+
+            {{-- Right --}}
+            <div class="nav-right">
+                <span class="badge-role">Karyawan</span>
+                <span class="user-name">{{ auth()->user()->name }}</span>
+                <div class="profile-dropdown">
+                    <button type="button" class="profile-button">
+                        <div class="avatar" aria-label="Avatar">
+                            @if(auth()->user()->profile_photo_url)
+                                <img src="{{ auth()->user()->profile_photo_url }}" alt="Avatar">
+                            @else
+                                {{ auth()->user()->initials }}
+                            @endif
+                        </div>
+                        <span>{{ auth()->user()->name }}</span>
+                        <span class="dropdown-icon">▾</span>
+                    </button>
+                    <div class="profile-menu">
+                        <a href="{{ route('profile.edit') }}" class="menu-item">Profile</a>
+                        <div class="menu-divider"></div>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="menu-item">Sign out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
         @endif
-    </head>
-    <body>
-        <!-- Header -->
-        <header>
-            <div class="container">
-                <div class="flex justify-between items-center py-4">
-                    <div class="flex items-center gap-8">
-                        <a href="{{ route('dashboard') }}" class="text-xl font-bold" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                            Punish
-                        </a>
-                        <nav class="hidden sm:flex gap-6">
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
-                            @auth
-                                @if(Auth::user()->role === 'admin')
-                                    <a href="{{ route('karyawan.index.web') }}">Karyawan</a>
-                                @endif
-                                <a href="{{ route('departemen.index.web') }}">Departemen</a>
-                                <a href="{{ route('jenis-pelanggaran.index.web') }}">Jenis Pelanggaran</a>
-                                <a href="{{ route('pelanggaran.index.web') }}">Pelanggaran</a>
-                                <a href="{{ route('sanksi.index.web') }}">Sanksi</a>
-                            @endauth
-                        </nav>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        @auth
-                            <span class="text-sm text-gray-600">👤 {{ Auth::user()->name }}</span>
-                            <a href="{{ route('profile.show') }}" class="btn btn-secondary btn-sm">👁️ Profil</a>
-                            <form action="{{ route('logout') }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="btn btn-secondary btn-sm">Logout</button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-secondary btn-sm">Login</a>
-                            <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Register</a>
-                        @endauth
-                    </div>
-                </div>
+
+    {{-- ===== NAVBAR GUEST ===== --}}
+    @else
+        <nav class="navbar-guest">
+            <a href="/" class="brand"><span>Punish</span></a>
+            <div>
+                <a href="{{ route('register') }}" class="btn-register">Daftar</a>
+                <a href="{{ route('login') }}" class="btn-login">Masuk</a>
             </div>
-        </header>
+        </nav>
+    @endauth
 
-        <!-- Main Content -->
-        <main class="container py-8">
-            @if ($errors->any())
-                <div class="alert alert-error">
-                    <strong>❌ Error!</strong>
-                    <ul style="margin-top: 8px; margin-left: 20px;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="alert alert-success">
-                    ✅ {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-error">
-                    ❌ {{ session('error') }}
-                </div>
-            @endif
-
-            @yield('content')
-        </main>
-
-        <!-- Footer -->
-        <footer>
-            <div class="container">
-                <p>&copy; {{ date('Y') }} <strong>Punish</strong> - Sistem Manajemen Pelanggaran Karyawan. All rights reserved.</p>
+    {{-- ===== FLASH MESSAGES ===== --}}
+    <div class="main-content">
+        @if(session('success'))
+            <div class="alert alert-success">
+                ✓ {{ session('success') }}
             </div>
-        </footer>
+        @endif
 
-        <!-- Toast Notifications Container -->
-        <div class="toast-container" id="toastContainer"></div>
+        @if(session('error'))
+            <div class="alert alert-error">
+                ✕ {{ session('error') }}
+            </div>
+        @endif
 
-        <!-- JavaScript for Toast Notifications -->
-        <script>
-            // Toast notification system
-            class Toast {
-                constructor(message, type = 'info', duration = 4000) {
-                    this.message = message;
-                    this.type = type;
-                    this.duration = duration;
-                    this.element = null;
-                    this.create();
-                    this.show();
-                    this.autoHide();
-                }
+        @yield('content')
+    </div>
 
-                create() {
-                    const toast = document.createElement('div');
-                    toast.className = `toast ${this.type}`;
-                    
-                    const icons = {
-                        success: '✅',
-                        error: '❌',
-                        info: 'ℹ️',
-                        warning: '⚠️'
-                    };
+    {{-- ===== FOOTER ===== --}}
+    <footer class="site-footer">
+        &copy; {{ date('Y') }} <strong>Punish</strong> &mdash; Sistem Manajemen Pelanggaran Karyawan. All rights reserved.
+    </footer>
 
-                    toast.innerHTML = `
-                        <div class="toast-icon">${icons[this.type] || 'ℹ️'}</div>
-                        <div class="toast-content">${this.message}</div>
-                        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-                    `;
-
-                    this.element = toast;
-                }
-
-                show() {
-                    document.getElementById('toastContainer').appendChild(this.element);
-                    
-                    // Trigger animation
-                    setTimeout(() => {
-                        this.element.style.transform = 'translateX(0)';
-                    }, 10);
-                }
-
-                autoHide() {
-                    setTimeout(() => {
-                        if (this.element && this.element.parentElement) {
-                            this.element.remove();
-                        }
-                    }, this.duration);
-                }
-            }
-
-            // Function to show toast
-            function showToast(message, type = 'info') {
-                new Toast(message, type);
-            }
-
-            // Convert session messages to toasts
-            document.addEventListener('DOMContentLoaded', function() {
-                @if(session('success'))
-                    showToast("{{ session('success') }}", 'success');
-                @endif
-                
-                @if(session('error'))
-                    showToast("{{ session('error') }}", 'error');
-                @endif
-                
-                @if(session('warning'))
-                    showToast("{{ session('warning') }}", 'warning');
-                @endif
-                
-                @if(session('info'))
-                    showToast("{{ session('info') }}", 'info');
-                @endif
-            });
-
-            // Enhanced form validation with toast feedback
-            document.addEventListener('DOMContentLoaded', function() {
-                const forms = document.querySelectorAll('form');
-                forms.forEach(form => {
-                    form.addEventListener('submit', function(e) {
-                        const submitBtn = form.querySelector('button[type="submit"]');
-                        if (submitBtn) {
-                            submitBtn.textContent = '⏳ Memproses...';
-                            submitBtn.disabled = true;
-                            submitBtn.classList.add('loading');
-                        }
-                    });
-                });
-
-                // Enhanced delete confirmations
-                const deleteButtons = document.querySelectorAll('button[onclick*="confirm"]');
-                deleteButtons.forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const message = this.getAttribute('onclick').match(/confirm\('([^']+)'\)/);
-                        if (message && !confirm(message[1])) {
-                            return false;
-                        }
-                        this.form.submit();
-                    });
-                });
-            });
-        </script>
-    </body>
+</body>
 </html>

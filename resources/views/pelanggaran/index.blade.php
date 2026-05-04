@@ -239,6 +239,65 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .notification-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .notification-summary {
+        margin: -8px 0 16px;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .notification-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .notification-item {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 12px 14px;
+        transition: all 0.2s ease;
+    }
+
+    .notification-item.unread {
+        background: #f8faff;
+        border-color: #a5b4fc;
+    }
+
+    .notification-title-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 12px;
+        color: #4b5563;
+        margin-bottom: 6px;
+    }
+
+    .notification-empty,
+    .notification-item p {
+        font-size: 13px;
+        color: #4b5563;
+        line-height: 1.5;
+    }
 </style>
 
 <div class="page-header">
@@ -262,6 +321,12 @@
         </button>
     </form>
 </div>
+
+@include('partials.notification-list', [
+    'title' => 'Notifikasi',
+    'notifications' => $notifications,
+    'unreadNotificationCount' => $unreadNotificationCount,
+])
 
 <div class="table-card">
     <div class="table-wrapper">
@@ -314,7 +379,7 @@
     </div>
 </div>
 
-@if($pelanggaran instanceof \Illuminate\Pagination\Paginator)
+@if($pelanggaran->hasPages())
     <div class="pagination">
         {{ $pelanggaran->links() }}
     </div>

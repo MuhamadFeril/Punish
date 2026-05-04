@@ -231,6 +231,64 @@
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
+
+    .notification-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .notification-summary {
+        margin: -8px 0 16px;
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .notification-list {
+        display: grid;
+        gap: 12px;
+    }
+
+    .notification-item {
+        display: block;
+        padding: 14px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        background: #fff;
+    }
+
+    .notification-item:hover {
+        transform: translateY(-2px);
+        border-color: #c7d2fe;
+        box-shadow: 0 10px 18px rgba(99, 102, 241, 0.08);
+    }
+
+    .notification-item.unread {
+        border-color: #a5b4fc;
+        background: #f8faff;
+    }
+
+    .notification-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #4b5563;
+    }
+
+    .notification-item p,
+    .notification-empty {
+        font-size: 14px;
+        color: #4b5563;
+        line-height: 1.5;
+    }
     
     @media (max-width: 768px) {
         .two-column {
@@ -322,6 +380,13 @@
                 </ul>
             </div>
         </div>
+        <div style="margin-top: 20px;">
+            @include('partials.notification-list', [
+                'title' => 'Notifikasi Admin',
+                'notifications' => $notifications,
+                'unreadNotificationCount' => $unreadNotificationCount,
+            ])
+        </div>
     @else
         <div class="two-column">
             <div class="info-card">
@@ -363,12 +428,31 @@
         <div class="info-card">
             <h3 class="section-title">📄 Pelanggaran Terbaru</h3>
             @if($recentPelanggaran->isEmpty())
-                <p>Tidak ada pelanggaran yang ditemukan untuk akun Anda.</p>
+                <p>Belum ada data pelanggaran yang bisa ditampilkan.</p>
             @else
                 <ul class="info-list">
                     @foreach($recentPelanggaran as $item)
                         <li>
-                            {{ $item->jenisPelanggaran->nama_jenis_pelanggaran ?? 'Pelanggaran' }} pada {{ date('d M Y', strtotime($item->tanggal_pelanggaran)) }}
+                            <strong>{{ $item->karyawan->nama_karyawan ?? 'Karyawan' }}</strong> -
+                            {{ $item->jenisPelanggaran->nama_pelanggaran ?? 'Pelanggaran' }} pada {{ date('d M Y', strtotime($item->tanggal_pelanggaran)) }}
+                            @if($item->sanksi->count() > 0)
+                                - Sanksi: {{ $item->sanksi->first()->jenis_sanksi }}
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+
+        <div class="info-card" style="margin-top: 20px;">
+            <h3 class="section-title">Pelanggaran Saya</h3>
+            @if(($myRecentPelanggaran ?? collect())->isEmpty())
+                <p>Belum ada pelanggaran yang terhubung ke akun Anda.</p>
+            @else
+                <ul class="info-list">
+                    @foreach($myRecentPelanggaran as $item)
+                        <li>
+                            {{ $item->jenisPelanggaran->nama_pelanggaran ?? 'Pelanggaran' }} pada {{ date('d M Y', strtotime($item->tanggal_pelanggaran)) }}
                             @if($item->sanksi->count() > 0)
                                 - Sanksi: {{ $item->sanksi->first()->jenis_sanksi }}
                             @endif

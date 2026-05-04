@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'email', 'password', 'role', 'photo'])]
@@ -41,5 +42,28 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $parts = preg_split('/\s+/', trim((string) $this->name)) ?: [];
+        $initials = collect($parts)
+            ->filter()
+            ->take(2)
+            ->map(fn ($part) => strtoupper(substr($part, 0, 1)))
+            ->implode('');
+
+        return $initials !== '' ? $initials : 'U';
+    }
+
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        if (!$this->photo || !Route::has('profile.photo')) {
+            return null;
+        }
+
+        $version = $this->updated_at ? $this->updated_at->timestamp : now()->timestamp;
+
+        return route('profile.photo', ['v' => $version]);
     }
 }

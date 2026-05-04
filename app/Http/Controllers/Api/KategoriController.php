@@ -89,4 +89,34 @@ class KategoriController extends Controller
         }
     }
 
+    public function trashed()
+    {
+        try {
+            $data = $this->kategoriHandler->trashed()->get();
+            return ResponsHelper::success($data);
+        } catch (\Exception $e) {
+            return ResponsHelper::error('Gagal mengambil trashed kategori: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function restore($id)
+    {
+        try {
+            $kategori = $this->kategoriHandler->restore($id);
+            return ResponsHelper::success(new KategoriResource($kategori), 'Kategori restored successfully');
+        } catch (\Exception $e) {
+            return ResponsHelper::error('Gagal merestore kategori: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function forceDelete($id)
+    {
+        try {
+            $this->kategoriHandler->forceDelete($id);
+            return ResponsHelper::success(null, 'Kategori permanently deleted');
+        } catch (\Exception $e) {
+            return ResponsHelper::error('Gagal menghapus permanen kategori: ' . $e->getMessage(), 500);
+        }
+    }
+
 }

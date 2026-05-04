@@ -30,7 +30,7 @@ class SanksiNotification extends Notification implements ShouldQueue
             'message' => "Sanksi '{$this->sanksi->jenis_sanksi}' telah diterbitkan untuk pelanggaran Anda.",
             'sanksi_id' => $this->sanksi->id,
             'pelanggaran_id' => $this->sanksi->pelanggaran_id,
-            'link' => route('sanksi.show', $this->sanksi->id),
+            'link' => route('sanksi.show.web', $this->sanksi->id),
         ];
     }
 }

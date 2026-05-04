@@ -14,7 +14,9 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            if (Auth::user()->role === 'admin') {
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
                 $data = [
                     'isAdmin' => true,
                     'totalKaryawan' => Karyawan::count(),
@@ -22,14 +24,19 @@ class DashboardController extends Controller
                     'totalJenisPelanggaran' => Jenispelanggaran::count(),
                     'totalPelanggaran' => Pelanggaran::count(),
                     'totalSanksi' => Sanksi::count(),
+                    'notifications' => $user->notifications()->latest()->take(5)->get(),
+                    'unreadNotificationCount' => $user->unreadNotifications()->count(),
                 ];
             } else {
-                $user = Auth::user();
                 $karyawan = Karyawan::where('email_karyawan', $user->email)->first();
 
                 $userPelanggaranCount = 0;
                 $userSanksiCount = 0;
-                $recentPelanggaran = collect();
+                $myRecentPelanggaran = collect();
+                $recentPelanggaran = Pelanggaran::with(['karyawan', 'jenisPelanggaran', 'sanksi'])
+                    ->latest()
+                    ->take(5)
+                    ->get();
                 $notifications = $user->notifications()->latest()->take(5)->get();
                 $unreadNotificationCount = $user->unreadNotifications()->count();
 
@@ -38,7 +45,7 @@ class DashboardController extends Controller
                     $userSanksiCount = Sanksi::whereHas('pelanggaran', function ($query) use ($karyawan) {
                         $query->where('karyawan_id', $karyawan->id);
                     })->count();
-                    $recentPelanggaran = $karyawan->pelanggaran()->with(['jenisPelanggaran', 'sanksi'])->latest()->take(5)->get();
+                    $myRecentPelanggaran = $karyawan->pelanggaran()->with(['jenisPelanggaran', 'sanksi'])->latest()->take(5)->get();
                 }
 
                 $data = [
@@ -46,6 +53,7 @@ class DashboardController extends Controller
                     'totalPelanggaran' => $userPelanggaranCount,
                     'totalSanksi' => $userSanksiCount,
                     'recentPelanggaran' => $recentPelanggaran,
+                    'myRecentPelanggaran' => $myRecentPelanggaran,
                     'notifications' => $notifications,
                     'unreadNotificationCount' => $unreadNotificationCount,
                 ];

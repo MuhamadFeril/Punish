@@ -30,6 +30,8 @@
         font-size: 40px;
         color: white;
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        overflow: hidden;
+        border: 3px solid #e0e7ff;
     }
 
     .profile-title {
@@ -138,45 +140,35 @@
         animation: slideIn 0.3s ease-out;
     }
 
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     .alert-success {
         background: #d1fae5;
         color: #065f46;
         border-left: 4px solid #10b981;
-    }
-
-    .alert-icon {
-        font-size: 18px;
     }
 </style>
 
 <div class="profile-container">
     @if(session('success'))
         <div class="alert alert-success">
-            <span class="alert-icon">✅</span>
+            <span>✅</span>
             <span>{{ session('success') }}</span>
         </div>
     @endif
 
     <div class="profile-header">
         <div class="profile-avatar">
-            @if($user->photo)
-                <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto Profil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            {{-- ✅ FOTO FIX --}}
+            @if($user->photo && $user->profile_photo_url)
+                <img src="{{ $user->profile_photo_url }}" 
+                     alt="Foto Profil"
+                     style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
             @else
                 {{ strtoupper(substr($user->name, 0, 1)) }}
             @endif
         </div>
+
         <h1 class="profile-title">{{ $user->name }}</h1>
+
         <span class="profile-role {{ $user->role === 'admin' ? 'admin' : '' }}">
             {{ $user->role === 'admin' ? '👨‍💼 Admin' : '👤 User' }}
         </span>
