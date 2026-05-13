@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\JenisPelanggaranController;
 use App\Http\Controllers\Api\SanksiController;
 use App\Http\Controllers\Api\DepartemenController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CaptchaController;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\EmailController;
@@ -15,6 +16,11 @@ use App\Http\Controllers\Api\EmailController;
 // Auth routes (public)
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('google', [AuthController::class, 'google']);
+
+// Captcha API routes
+Route::get('captcha', [CaptchaController::class, 'generateCaptcha']);
+Route::post('captcha/validate', [CaptchaController::class, 'validateCaptcha']);
 
    Route::resource('karyawan', KaryawanController::class);
         // force parameter name to 'departemen' to avoid incorrect singularization

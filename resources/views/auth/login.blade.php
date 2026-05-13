@@ -208,6 +208,70 @@
         font-size: 14px;
         color: #6b7280;
     }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 24px 0;
+        gap: 12px;
+    }
+
+    .divider-line {
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+    }
+
+    .divider-text {
+        font-size: 12px;
+        color: #9ca3af;
+        font-weight: 500;
+    }
+
+    .social-login {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        background: white;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .social-login:hover {
+        border-color: #d1d5db;
+        background: #f9fafb;
+        transform: translateY(-1px);
+    }
+
+    .social-login:active {
+        transform: translateY(0);
+    }
+
+    .google-btn {
+        border-color: #4f46e5;
+        background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
+        color: white;
+    }
+
+    .google-btn:hover {
+        border-color: #4338ca;
+        background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .google-icon {
+        font-size: 18px;
+    }
+
 </style>
 
 <div class="login-container">
@@ -257,10 +321,43 @@
                 @enderror
             </div>
 
+            <div class="form-group">
+                <label class="form-label">🤖 Verifikasi Captcha</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                    <img src="{{ route('captcha.image') }}" alt="Captcha" id="captcha-img" style="border: 1px solid #e5e7eb; border-radius: 8px; height: 42px;">
+                    <button type="button" onclick="document.getElementById('captcha-img').src = '{{ route('captcha.refresh') }}?' + Math.random()" style="background: white; border: 1px solid #e5e7eb; padding: 0 12px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: #4b5563;">
+                        ↻ Refresh
+                    </button>
+                </div>
+                <input 
+                    type="text" 
+                    id="captcha" 
+                    name="captcha" 
+                    class="form-input"
+                    placeholder="Ketik teks dari gambar di atas"
+                    required
+                    autocomplete="off"
+                >
+                @error('captcha')
+                    <div class="form-error">✗ {{ $message }}</div>
+                @enderror
+            </div>
+
             <button type="submit" class="submit-btn">
                 🚀 Login
             </button>
         </form>
+
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">ATAU</span>
+            <div class="divider-line"></div>
+        </div>
+
+        <a href="{{ route('google.login') }}" class="social-login google-btn">
+            <span class="google-icon">🔵</span>
+            Masuk dengan Google
+        </a>
 
         <div class="login-footer">
             Belum punya akun? 

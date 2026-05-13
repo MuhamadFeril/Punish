@@ -45,4 +45,28 @@ class AuthHandler
     {
         $request->user()->currentAccessToken()->delete();
     }
+
+    public function google(array $data)
+    {
+        $user = $this->authRepo->findByEmail($data['email']);
+
+        if ($user) {
+            // Update existing user with Google info
+            $user->update([
+                'google_id' => $data['google_id'] ?? null,
+                'avatar' => $data['avatar'] ?? null,
+            ]);
+        } else {
+            // Create new user from Google data
+            $user = $this->authRepo->register([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'google_id' => $data['google_id'] ?? null,
+                'avatar' => $data['avatar'] ?? null,
+                'password' => Hash::make(uniqid()), // Random password for OAuth users
+            ]);
+        }
+
+        return $user->createToken('auth_token')->plainTextToken;
+    }
 }

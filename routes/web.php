@@ -9,11 +9,18 @@ use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\JenisPelanggaranController;
 use App\Http\Controllers\PelanggaranController;
 use App\Http\Controllers\SanksiController;
+use App\Http\Controllers\CaptchaController;
 
 // Home
 Route::get('/', function () {
     return view('landing');
 });
+
+// Captcha Test
+Route::get('captcha-test', [CaptchaController::class, 'showForm'])->name('captcha.form');
+Route::get('captcha/image', [CaptchaController::class, 'generateCaptcha'])->name('captcha.image');
+Route::post('captcha/validate', [CaptchaController::class, 'validateCaptcha'])->name('captcha.validate');
+Route::get('captcha/refresh', [CaptchaController::class, 'refreshCaptcha'])->name('captcha.refresh');
 
 // ===== AUTH ROUTES (Public - Guest Only) =====
 Route::middleware('guest')->group(function () {
@@ -21,6 +28,9 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::get('register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('register/send-otp', [AuthController::class, 'sendOtp'])->name('register.send-otp');
+    Route::get('auth/google', [AuthController::class, 'googleLogin'])->name('google.login');
+    Route::get('auth/google/callback', [AuthController::class, 'googleCallback'])->name('google.callback');
 });
 
 // ===== PROTECTED ROUTES (Require Login) =====

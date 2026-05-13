@@ -17,6 +17,23 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+    
+
+    protected $table = 'users';
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'google_id',
+        'avatar',
+        'photo',
+    ];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     /**
      * Default attribute values

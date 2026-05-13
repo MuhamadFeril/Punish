@@ -1,34 +1,30 @@
 <?php
 
-
-
 namespace App\Http\Controllers\Api;
-use App\Handlers\AuthHandler;     
+use App\Handlers\AuthHandler;
 use App\Helpers\ResponsHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\GoogleRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class AuthController extends Controller
 {
-    protected $authHandler;
+    protected AuthHandler $authHandler;
 
     public function __construct(AuthHandler $authHandler)
     {
         $this->authHandler = $authHandler;
     }
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:6',
-            ]);
-
-            $user = $this->authHandler->register($validated);
+            $user = $this->authHandler->register($request->validated());
             return ResponsHelper::success($user, 'Registration successful');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return ResponsHelper::error($e->errors(), 422);
@@ -38,15 +34,10 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
-            $credentials = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required|string',
-            ]);
-
-            $token = $this->authHandler->login($credentials);
+            $token = $this->authHandler->login($request->validated());
             if (!$token) {
                 return ResponsHelper::error('Invalid credentials', 401);
             }
@@ -57,6 +48,23 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
             return ResponsHelper::error('Login failed: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function google(GoogleRequest $request)
+    {
+        try {
+            $token = $this->authHandler->google($request->validated());
+            if (!$token) {
+                return ResponsHelper::error('Invalid Google credentials', 401);
+            }
+
+            return ResponsHelper::success(['token' => $token], 'Google login successful');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponsHelper::error($e->errors(), 422);
+        } catch (\Exception $e) {
+            Log::error('Google login error: ' . $e->getMessage());
+            return ResponsHelper::error('Google login failed: ' . $e->getMessage(), 500);
         }
     }
 
@@ -93,19 +101,4 @@ class AuthController extends Controller
     }
 
     // Update user and clear cache
-    public function update(Request $request, $id)
-    {
-        try {
-            $user = User::find($id);
-            if (! $user) {
-                return ResponsHelper::error('User not found', 404);
-            }
-            $user->update($request->all());
-            Cache::forget("user:{$id}");
-            return ResponsHelper::success($user, 'User updated and cache cleared');
-        } catch (\Exception $e) {
-            Log::error('Error updating user: ' . $e->getMessage());
-            return ResponsHelper::error('Gagal memperbarui user', 500);
-        }
-    }
 }

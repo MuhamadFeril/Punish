@@ -16,11 +16,23 @@ class AuthRepositories implements AuthInterface
 
     public function register(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => $data['password'],
         ]);
+
+        if (!empty($data['google_id'])) {
+            $user->google_id = $data['google_id'];
+        }
+
+        if (!empty($data['avatar'])) {
+            $user->avatar = $data['avatar'];
+        }
+
+        $user->save();
+
+        return $user;
     }
 
     public function login(array $credentials)
@@ -31,11 +43,27 @@ class AuthRepositories implements AuthInterface
             return $user;
         }
 
+   
+
         return null;
     }
     public function logout()
     {
         Auth::logout();
         return true;
+    }
+    public  function googleLogin(array $data)
+    {
+        $user = User::where('google_id', $data['google_id'])->first();
+
+        if (!$user) {
+            $user = $this->register($data);
+        }
+
+        return $user;
+    }
+    public function googleRegister(array $data)
+    {
+        return $this->register($data);
     }
 }
