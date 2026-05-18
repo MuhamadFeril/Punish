@@ -562,7 +562,20 @@
 
     {{-- ===== NAVBAR ADMIN ===== --}}
     @auth
-        @if(auth()->user()->role === 'admin')
+        @if(!auth()->user()->otp_verified_at)
+        <nav class="navbar-user">
+            <a href="{{ route('otp.verify.form') }}" class="brand"><span>Punish</span></a>
+
+            <div class="nav-right">
+                <span class="badge-role">OTP Pending</span>
+                <span class="user-name">{{ auth()->user()->name }}</span>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn-logout">Keluar</button>
+                </form>
+            </div>
+        </nav>
+        @elseif(auth()->user()->role === 'admin')
         <nav class="navbar-admin">
             {{-- Brand --}}
             <a href="{{ route('dashboard') }}" class="brand"><span>Punish</span> Admin</a>

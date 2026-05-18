@@ -13,7 +13,6 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // create admin if not exists (hardcoded credentials)
         $email = 'admin@gmail.com';
         $name = 'Admin King';
         $password = 'qwertyuiop';
@@ -24,7 +23,10 @@ class AdminUserSeeder extends Seeder
                 'name' => $name,
                 'password' => Hash::make($password),
                 'role' => 'admin',
+                'otp_verified_at' => now(),
             ]
         );
+
+        $this->command?->info('Admin user seeded: admin@gmail.com / qwertyuiop');
     }
 }

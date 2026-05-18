@@ -184,7 +184,7 @@
 
 <div class="page-header">
     <h1 class="page-title">⚖️ Daftar Jenis Pelanggaran</h1>
-    @if(Auth::user()->role === 'admin')
+    @if(auth()->user()->role === 'admin')
         <a href="{{ route('jenis-pelanggaran.create.web') }}" class="btn btn-create">
             ➕ Tambah Jenis Pelanggaran
         </a>
@@ -206,7 +206,7 @@
                 @forelse($jenisPelanggaran as $item)
                     <tr>
                         <td class="violation-name">{{ $item->nama_pelanggaran }}</td>
-                        <td class="violation-description">{{ Str::limit($item->deskripsi_pelanggaran, 100) }}</td>
+                        <td class="violation-description">{{ \Illuminate\Support\Str::limit($item->deskripsi_pelanggaran, 100) }}</td>
                         <td>
                             <span class="severity-badge severity-{{ $item->tingkat_pelanggaran }}">
                                 {{ $item->tingkat_pelanggaran === 'ringan' ? '🟡' : ($item->tingkat_pelanggaran === 'sedang' ? '🟠' : '🔴') }}
@@ -215,7 +215,7 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                @if(Auth::user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('jenis-pelanggaran.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
                                     <form action="{{ route('jenis-pelanggaran.destroy.web', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
@@ -232,7 +232,7 @@
                             <div class="empty-state">
                                 <div class="empty-state-icon">⚖️</div>
                                 <div class="empty-state-text">Tidak ada data jenis pelanggaran</div>
-                                @if(Auth::user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('jenis-pelanggaran.create.web') }}" class="btn btn-create">
                                         ➕ Tambah Jenis Pelanggaran Baru
                                     </a>

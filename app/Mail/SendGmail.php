@@ -16,7 +16,7 @@ class SendGmail extends Mailable
     public function __construct(string $subjectLine, string $bodyContent)
     {
         $this->subjectLine = $subjectLine;
-        $this->bodyContent = $bodyContent;
+        $this->bodyContent = $bodyContent;  
     }
 
     public function build()

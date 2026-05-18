@@ -182,7 +182,7 @@
 
 <div class="page-header">
     <h1 class="page-title">👥 Daftar Karyawan</h1>
-    @if(Auth::user()->role === 'admin')
+    @if(auth()->user()->role === 'admin')
         <a href="{{ route('karyawan.create.web') }}" class="btn btn-create">
             ➕ Tambah Karyawan
         </a>
@@ -235,7 +235,7 @@
                         <td>
                             <div class="action-buttons">
                                 <a href="{{ route('karyawan.show.web', $item->id) }}" class="btn btn-detail">👁️ Detail</a>
-                                @if(Auth::user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('karyawan.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
                                     <form action="{{ route('karyawan.destroy.admin', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                         @csrf
@@ -252,7 +252,7 @@
                             <div class="empty-state">
                                 <div class="empty-state-icon">👥</div>
                                 <div class="empty-state-text">Tidak ada data karyawan</div>
-                                @if(Auth::user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('karyawan.create.web') }}" class="btn btn-create">
                                         ➕ Tambah Karyawan Baru
                                     </a>

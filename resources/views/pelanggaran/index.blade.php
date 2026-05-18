@@ -347,7 +347,7 @@
                         <td class="violation-type">{{ $item->jenisPelanggaran->nama_pelanggaran }}</td>
                         <td class="violation-date">{{ \Carbon\Carbon::parse($item->tanggal_pelanggaran)->format('d-m-Y') }}</td>
                         <td class="description-preview" title="{{ $item->keterangan_pelanggaran }}">
-                            {{ Str::limit($item->keterangan_pelanggaran, 50) }}
+                            {{ \Illuminate\Support\Str::limit($item->keterangan_pelanggaran, 50) }}
                         </td>
                         <td>
                             <div class="action-buttons">

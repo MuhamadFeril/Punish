@@ -426,7 +426,7 @@
                         <nav class="hidden sm:flex gap-6">
                             <a href="{{ route('dashboard') }}">Dashboard</a>
                             @auth
-                                @if(Auth::user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('karyawan.index.web') }}">Karyawan</a>
                                 @endif
                                 <a href="{{ route('departemen.index.web') }}">Departemen</a>
@@ -438,7 +438,7 @@
                     </div>
                     <div class="flex items-center gap-4">
                         @auth
-                            <span class="text-sm text-gray-600">👤 {{ Auth::user()->name }}</span>
+                            <span class="text-sm text-gray-600">👤 {{ auth()->user()->name }}</span>
                             <a href="{{ route('profile.show') }}" class="btn btn-secondary btn-sm">👁️ Profil</a>
                             <form action="{{ route('logout') }}" method="POST" class="inline">
                                 @csrf

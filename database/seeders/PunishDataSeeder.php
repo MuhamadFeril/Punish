@@ -22,20 +22,25 @@ class PunishDataSeeder extends Seeder
     public function run(): void
     {
         // Create admin user
-        $admin = User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@punish.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@punish.com'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'otp_verified_at' => now(),
+            ]
+        );
 
         // Create regular user
-        $user = User::create([
-            'name' => 'User Regular',
-            'email' => 'user@punish.com',
-            'password' => Hash::make('password'),
-            'role' => 'user',
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => 'user@punish.com'],
+            [
+                'name' => 'User Regular',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+            ]
+        );
 
         // Create departments
         $departments = [

@@ -7,7 +7,7 @@
         <p class="text-gray-600">Detail Karyawan</p>
     </div>
     <div class="flex gap-2">
-        @if(Auth::user()->role === 'admin')
+        @if(auth()->user()->role === 'admin')
             <a href="{{ route('karyawan.edit.web', $karyawan->id) }}" class="btn btn-primary">Edit</a>
         @endif
         <a href="{{ route('karyawan.index.web') }}" class="btn btn-secondary">Kembali</a>
@@ -74,7 +74,7 @@
                         <tr>
                             <td>{{ $pelanggaran->jenisPelanggaran->nama_pelanggaran }}</td>
                             <td>{{ $pelanggaran->tanggal_pelanggaran }}</td>
-                            <td>{{ Str::limit($pelanggaran->keterangan_pelanggaran, 50) }}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($pelanggaran->keterangan_pelanggaran, 50) }}</td>
                             <td>
                                 <a href="{{ route('pelanggaran.show.web', $pelanggaran->id) }}" class="btn btn-secondary btn-sm">Detail</a>
                             </td>

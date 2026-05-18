@@ -33,8 +33,15 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google/callback', [AuthController::class, 'googleCallback'])->name('google.callback');
 });
 
-// ===== PROTECTED ROUTES (Require Login) =====
+// ===== OTP VERIFICATION ROUTES =====
 Route::middleware('auth')->group(function () {
+    Route::get('otp/verify', [AuthController::class, 'showOtpVerifyForm'])->name('otp.verify.form');
+    Route::post('otp/verify', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+    Route::post('otp/resend', [AuthController::class, 'resendOtp'])->name('otp.resend');
+});
+
+// ===== PROTECTED ROUTES (Require Login) =====
+Route::middleware(['auth', 'otp.verified'])->group(function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
