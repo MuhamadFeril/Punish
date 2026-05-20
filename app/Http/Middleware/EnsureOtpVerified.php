@@ -21,6 +21,16 @@ class EnsureOtpVerified
             return $next($request);
         }
 
+        if ($request->expectsJson() || $request->is('api/*')) {
+            if (!$request->is('api/logout', 'api/otp/verify', 'api/otp/resend')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Selesaikan verifikasi OTP terlebih dahulu.'
+                ], 403);
+            }
+            return $next($request);
+        }
+
         if (session('otp_user_id') !== $user->id) {
             session(['otp_user_id' => $user->id]);
         }

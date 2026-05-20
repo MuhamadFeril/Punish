@@ -53,7 +53,6 @@ Route::middleware(['auth', 'otp.verified'])->group(function () {
     Route::get('profile/photo', [ProfileController::class, 'photo'])->name('profile.photo');
 
     // ===== ALL AUTHENTICATED CAN VIEW (index, show) =====
-    Route::get('karyawan', [KaryawanController::class, 'index'])->name('karyawan.index.web');
     Route::get('departemen', [DepartemenController::class, 'index'])->name('departemen.index.web');
     Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index'])->name('jenis-pelanggaran.index.web');
     Route::get('sanksi', [SanksiController::class, 'index'])->name('sanksi.index.web');
@@ -61,8 +60,10 @@ Route::middleware(['auth', 'otp.verified'])->group(function () {
     // ===== ADMIN ONLY ROUTES =====
     Route::middleware('role:admin')->group(function () {
         // Karyawan Management
+        Route::get('karyawan', [KaryawanController::class, 'index'])->name('karyawan.index.web');
         Route::post('karyawan', [KaryawanController::class, 'store'])->name('karyawan.store.admin');
         Route::get('karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create.web');
+        Route::get('karyawan/{karyawan}', [KaryawanController::class, 'show'])->name('karyawan.show.web');
         Route::get('karyawan/{karyawan}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit.web');
         Route::put('karyawan/{karyawan}', [KaryawanController::class, 'update'])->name('karyawan.update.admin');
         Route::delete('karyawan/{karyawan}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy.admin');
@@ -89,7 +90,6 @@ Route::middleware(['auth', 'otp.verified'])->group(function () {
         Route::delete('sanksi/{sanksi}', [SanksiController::class, 'destroy'])->name('sanksi.destroy.web');
     });
 
-    Route::get('karyawan/{karyawan}', [KaryawanController::class, 'show'])->name('karyawan.show.web');
     Route::get('departemen/{departemen}', [DepartemenController::class, 'show'])->name('departemen.show.web');
     Route::get('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'show'])->name('jenis-pelanggaran.show.web');
     Route::get('sanksi/{sanksi}', [SanksiController::class, 'show'])->name('sanksi.show.web');
@@ -106,3 +106,11 @@ Route::middleware(['auth', 'otp.verified'])->group(function () {
         'destroy' => 'pelanggaran.destroy.web'
     ]);
 });
+
+// Route to display images without requiring symlink on hosting
+Route::get('/display-image/{path}', function($path) {
+    if (Storage::disk('public')->exists($path)) {
+        return response()->file(Storage::disk('public')->path($path));
+    }
+    abort(404);
+})->where('path', '.*')->name('display.image');

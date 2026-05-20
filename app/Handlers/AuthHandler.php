@@ -69,4 +69,101 @@ class AuthHandler
 
         return $user->createToken('auth_token')->plainTextToken;
     }
+
+    // ==========================================
+    // OTP Methods
+    // ==========================================
+
+    public function sendOtp(array $data)
+    {
+        $email = strtolower(trim($data['email']));
+        
+        $existing = $this->authRepo->findOtpRecord($email, 'register');
+        if ($existing) {
+            $this->authRepo->deleteOtpRecord($existing->id);
+        }
+
+        $otp = random_int(100000, 999999);
+
+        $otpRecord = $this->authRepo->createOtpRecord([
+            'email'      => $email,
+            'type'       => 'register',
+            'otp'        => Hash::make($otp),
+            'expired_at' => now()->addMinutes(10),
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($email)->send(
+                new \App\Mail\SendOtpMail($otp)
+            );
+        } catch (\Exception $e) {
+            $this->authRepo->deleteOtpRecord($otpRecord->id);
+            throw $e;
+        }
+
+        return true;
+    }
+
+    public function verifyOtp(array $data)
+    {
+        $type = $data['type'];
+        $identifier = $type === 'register' ? strtolower(trim($data['email'])) : $data['user_id'];
+        
+        $otpRecord = $this->authRepo->findOtpRecord($identifier, $type);
+        
+        if (!$otpRecord || now()->greaterThan($otpRecord->expired_at)) {
+            throw new \Exception('Kode OTP tidak valid atau telah kedaluwarsa.');
+        }
+
+        if (!Hash::check($data['otp'], $otpRecord->otp)) {
+            throw new \Exception('Kode OTP tidak valid.');
+        }
+
+        $this->authRepo->deleteOtpRecord($otpRecord->id);
+
+        if ($type === 'login') {
+            // Retrieve user and mark as verified
+            $user = $this->authRepo->findByEmail($otpRecord->email);
+            if ($user) {
+                $this->authRepo->markUserAsVerified($user);
+            }
+        }
+
+        return true;
+    }
+
+    public function resendOtp(int $userId)
+    {
+        // Ambil user
+        $user = \App\Models\User::find($userId);
+        if (!$user) {
+            throw new \Exception('User tidak ditemukan.');
+        }
+
+        $existing = $this->authRepo->findOtpRecord($userId, 'login');
+        if ($existing) {
+            $this->authRepo->deleteOtpRecord($existing->id);
+        }
+
+        $otp = random_int(100000, 999999);
+
+        $otpRecord = $this->authRepo->createOtpRecord([
+            'user_id'    => $user->id,
+            'email'      => $user->email,
+            'type'       => 'login',
+            'otp'        => Hash::make($otp),
+            'expired_at' => now()->addMinutes(10),
+        ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to($user->email)->send(
+                new \App\Mail\SendOtpMail($otp)
+            );
+        } catch (\Exception $e) {
+            $this->authRepo->deleteOtpRecord($otpRecord->id);
+            throw $e;
+        }
+
+        return true;
+    }
 }

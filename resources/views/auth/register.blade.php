@@ -338,41 +338,38 @@
     }
 </style>
 
-<div class="register-page">
-    <div class="register-topbar">
-        <a href="/" class="register-brand"><span>Punish</span> Sistem</a>
-        <div class="register-topbar-link">
-            Sudah punya akun? <a href="{{ route('login') }}">&rarr; Masuk</a>
-        </div>
-    </div>
-
-    <div class="register-header">
-        <div class="register-title-area">
-            <h1 id="step-title" style="color: #503d42;">Step 1 dari 3 : Informasi Akun</h1>
-        </div>
-    </div>
-    
-    <div style="max-width: 900px; margin: 0 auto 40px auto;">
-        <div class="stepper">
-            <div class="stepper-line">
-                <div class="stepper-line-progress" id="stepper-progress" style="width: 0%;"></div>
+<div class="register-page container-fluid px-2 px-md-0" style="min-height:100vh; background:#fafafa;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+            <div class="register-topbar d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+                <a href="/" class="register-brand mb-2 mb-md-0"><span>Punish</span> Sistem</a>
+                <div class="register-topbar-link">
+                    Sudah punya akun? <a href="{{ route('login') }}">&rarr; Masuk</a>
+                </div>
             </div>
-            <div class="step-item active" id="indicator-1">
-                <div class="step-circle">1</div>
-                <div class="step-label">Informasi Akun</div>
+            <div class="register-header mb-3">
+                <div class="register-title-area">
+                    <h1 id="step-title" style="color: #503d42; font-size:1.2rem; font-weight:700;">Step 1 dari 3 : Informasi Akun</h1>
+                </div>
             </div>
-            <div class="step-item" id="indicator-2">
-                <div class="step-circle">2</div>
-                <div class="step-label">Captcha</div>
+            <div class="mb-4">
+                <div class="stepper d-flex flex-row justify-content-between align-items-center position-relative" style="width:100%;max-width:500px;margin:0 auto;">
+                    <div class="stepper-line w-100 position-absolute" style="top:18px;left:0;right:0;height:2px;background:#e5e7eb;z-index:1;"></div>
+                    <div class="step-item active text-center flex-fill position-relative" id="indicator-1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">Informasi Akun</div>
+                    </div>
+                    <div class="step-item text-center flex-fill position-relative" id="indicator-2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">Captcha</div>
+                    </div>
+                    <div class="step-item text-center flex-fill position-relative" id="indicator-3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">Verifikasi OTP</div>
+                    </div>
+                </div>
             </div>
-            <div class="step-item" id="indicator-3">
-                <div class="step-circle">3</div>
-                <div class="step-label">Verifikasi OTP</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="register-card">
+            <div class="register-card bg-white rounded-4 p-3 p-md-5 shadow-sm border mx-auto" style="max-width:600px;">
         @if (session('error'))
             <div style="background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
                 ❌ {{ session('error') }}

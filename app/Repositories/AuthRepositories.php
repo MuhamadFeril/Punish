@@ -66,4 +66,36 @@ class AuthRepositories implements AuthInterface
     {
         return $this->register($data);
     }
+
+    // ==========================================
+    // OTP Methods
+    // ==========================================
+
+    public function createOtpRecord(array $data)
+    {
+        return \App\Models\Otp::create($data);
+    }
+
+    public function findOtpRecord(string $identifier, string $type)
+    {
+        $query = \App\Models\Otp::where('type', $type);
+        if ($type === 'register') {
+            $query->where('email', $identifier);
+        } else {
+            $query->where('user_id', $identifier);
+        }
+        
+        return $query->latest()->first();
+    }
+
+    public function deleteOtpRecord(int $otpId)
+    {
+        return \App\Models\Otp::where('id', $otpId)->delete();
+    }
+
+    public function markUserAsVerified($user)
+    {
+        $user->forceFill(['otp_verified_at' => now()])->save();
+        return $user;
+    }
 }

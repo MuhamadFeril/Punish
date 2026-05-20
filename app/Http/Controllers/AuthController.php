@@ -132,18 +132,8 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            try {
-                $this->generateAndSendOtp(Auth::user());
-            } catch (\Exception $e) {
-                // BUG 5 FIX: Invalidate sesi setelah logout agar tidak terjadi session fixation
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return back()->with('error', 'Gagal mengirim OTP. Silakan coba lagi.');
-            }
-
-            return redirect()->route('otp.verify.form')
-                ->with('success', 'Kode OTP telah dikirim ke email Anda.');
+            Auth::user()->forceFill(['otp_verified_at' => now()])->save();
+            return redirect()->route('dashboard')->with('success', 'Login berhasil!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
@@ -285,15 +275,8 @@ class AuthController extends Controller
 
             // FIX: Wrap dalam try-catch — jika OTP gagal dikirim, user tetap terdaftar
             // dan diarahkan ke OTP form dengan pesan error agar bisa resend
-            try {
-                $this->generateAndSendOtp($user);
-            } catch (\Exception $e) {
-                return redirect()->route('otp.verify.form')
-                    ->with('error', 'Registrasi berhasil, namun OTP gagal dikirim. Gunakan tombol "Kirim Ulang".');
-            }
-
-            return redirect()->route('otp.verify.form')
-                ->with('success', 'Kode OTP telah dikirim ke email Anda.');
+            $user->forceFill(['otp_verified_at' => now()])->save();
+            return redirect()->route('dashboard')->with('success', 'Registrasi berhasil!');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
@@ -466,20 +449,8 @@ class AuthController extends Controller
             // FIX: Gunakan $request yang diinjeksi, bukan request() global
             $request->session()->regenerate();
 
-            try {
-                $this->generateAndSendOtp($user);
-            } catch (\Exception $e) {
-                // BUG 2 FIX: Invalidate sesi setelah logout agar tidak terjadi session fixation,
-                // konsisten dengan penanganan yang sama di login()
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return redirect()->route('login')
-                    ->with('error', 'Login Google berhasil, namun OTP gagal dikirim. Silakan coba lagi.');
-            }
-
-            return redirect()->route('otp.verify.form')
-                ->with('success', 'Kode OTP telah dikirim ke email Anda.');
+            $user->forceFill(['otp_verified_at' => now()])->save();
+            return redirect()->route('dashboard')->with('success', 'Login Google berhasil!');
 
         } catch (\Exception $e) {
             Log::error('Google Login Error: ' . $e->getMessage());

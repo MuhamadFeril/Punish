@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\EmailController;
 
 // Auth routes (public)
 Route::post('register', [AuthController::class, 'register']);
+Route::post('register/send-otp', [AuthController::class, 'sendOtp']);
+Route::post('register/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('google', [AuthController::class, 'google']);
 
@@ -22,26 +24,52 @@ Route::post('google', [AuthController::class, 'google']);
 Route::get('captcha', [CaptchaController::class, 'generateCaptcha']);
 Route::post('captcha/validate', [CaptchaController::class, 'validateCaptcha']);
 
-   Route::resource('karyawan', KaryawanController::class);
-        // force parameter name to 'departemen' to avoid incorrect singularization
-        Route::resource('departemen', DepartemenController::class)->parameters([
-            'departemen' => 'departemen'
-        ]);
-    Route::resource('jenis-pelanggaran', JenisPelanggaranController::class);
-    Route::resource('sanksi', SanksiController::class);
-    Route::resource('pelanggaran', PelanggaranController::class);
-    Route::resource('kategori', KategoriController::class);
-    Route::get('kategori/trashed', [KategoriController::class, 'trashed']);
-    Route::post('kategori/{id}/restore', [KategoriController::class, 'restore']);
-    Route::delete('kategori/{id}/force', [KategoriController::class, 'forceDelete']);
-    Route::post('send-gmail', [EmailController::class, 'sendGmail']);
-    // Route::put('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'update']);
-    // Route::delete('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'destroy']);
 // Protected routes (require auth)
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'otp.verified'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('otp/verify', [AuthController::class, 'verifyOtp']);
+    Route::post('otp/resend', [AuthController::class, 'resendOtp']);
     
- 
+    // ===== ALL AUTHENTICATED CAN VIEW (index, show) =====
+    Route::get('departemen', [DepartemenController::class, 'index']);
+    Route::get('departemen/{departemen}', [DepartemenController::class, 'show']);
+    
+    Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index']);
+    Route::get('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'show']);
+    
+    Route::get('sanksi', [SanksiController::class, 'index']);
+    Route::get('sanksi/{sanksi}', [SanksiController::class, 'show']);
+    
+    // ===== PELANGGARAN - ALL AUTHENTICATED CAN CRUD =====
+    Route::resource('pelanggaran', PelanggaranController::class);
+    Route::post('send-gmail', [EmailController::class, 'sendGmail']);
+    
+    // ===== ADMIN ONLY ROUTES =====
+    Route::middleware('role:admin')->group(function () {
+        // Karyawan Management (completely restricted from users)
+        Route::resource('karyawan', KaryawanController::class);
+        
+        // Departemen Management (CRUD only)
+        Route::post('departemen', [DepartemenController::class, 'store']);
+        Route::put('departemen/{departemen}', [DepartemenController::class, 'update']);
+        Route::delete('departemen/{departemen}', [DepartemenController::class, 'destroy']);
+        
+        // Jenis Pelanggaran Management (CRUD only)
+        Route::post('jenis-pelanggaran', [JenisPelanggaranController::class, 'store']);
+        Route::put('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'update']);
+        Route::delete('jenis-pelanggaran/{jenis_pelanggaran}', [JenisPelanggaranController::class, 'destroy']);
+        
+        // Sanksi Management (CRUD only)
+        Route::post('sanksi', [SanksiController::class, 'store']);
+        Route::put('sanksi/{sanksi}', [SanksiController::class, 'update']);
+        Route::delete('sanksi/{sanksi}', [SanksiController::class, 'destroy']);
+        
+        // Kategori Management
+        Route::resource('kategori', KategoriController::class);
+        Route::get('kategori/trashed', [KategoriController::class, 'trashed']);
+        Route::post('kategori/{id}/restore', [KategoriController::class, 'restore']);
+        Route::delete('kategori/{id}/force', [KategoriController::class, 'forceDelete']);
+    });
 });
 
 

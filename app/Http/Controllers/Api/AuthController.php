@@ -101,4 +101,57 @@ class AuthController extends Controller
     }
 
     // Update user and clear cache
+    // ... existing ...
+
+    // ==========================================
+    // OTP Endpoints
+    // ==========================================
+
+    public function sendOtp(\App\Http\Requests\Api\SendOtpRequest $request)
+    {
+        try {
+            $this->authHandler->sendOtp($request->validated());
+            return ResponsHelper::success(null, 'OTP berhasil dikirim.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponsHelper::error($e->errors(), 422);
+        } catch (\Exception $e) {
+            Log::error('Send OTP Error: ' . $e->getMessage());
+            return ResponsHelper::error('Gagal mengirim OTP: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function verifyOtp(\App\Http\Requests\Api\VerifyOtpRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            if ($data['type'] === 'login') {
+                $user = $request->user();
+                if (!$user) {
+                    return ResponsHelper::error('Unauthenticated.', 401);
+                }
+                $data['user_id'] = $user->id;
+            }
+
+            $this->authHandler->verifyOtp($data);
+            return ResponsHelper::success(null, 'OTP berhasil diverifikasi.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return ResponsHelper::error($e->errors(), 422);
+        } catch (\Exception $e) {
+            return ResponsHelper::error($e->getMessage(), 400);
+        }
+    }
+
+    public function resendOtp(\Illuminate\Http\Request $request)
+    {
+        try {
+            $user = $request->user();
+            if (!$user) {
+                return ResponsHelper::error('Unauthenticated.', 401);
+            }
+            $this->authHandler->resendOtp($user->id);
+            return ResponsHelper::success(null, 'OTP berhasil dikirim ulang.');
+        } catch (\Exception $e) {
+            return ResponsHelper::error('Gagal mengirim ulang OTP: ' . $e->getMessage(), 500);
+        }
+    }
 }

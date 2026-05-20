@@ -25,7 +25,7 @@ class RoleMiddleware
 
         // Check if user has the required role
         if (Auth::user()->role !== $role) {
-            return redirect('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini (Diperlukan: ' . $role . ')');
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
         return $next($request);

@@ -339,7 +339,7 @@
                     <div class="current-file">
                         ✓ File saat ini: {{ basename($pelanggaran->bukti_pelanggaran) }}
                         <br>
-                        <img src="{{ asset('storage/' . $pelanggaran->bukti_pelanggaran) }}" alt="Preview" style="max-width: 100%; height: auto; margin-top: 8px; border-radius: 6px; max-height: 200px;">
+                        <img src="{{ route('display.image', ['path' => $pelanggaran->bukti_pelanggaran]) }}" alt="Preview" style="max-width: 100%; height: auto; margin-top: 8px; border-radius: 6px; max-height: 200px;">
                     </div>
                 @endif
                 <div id="previewContainer" style="margin-top: 12px;"></div>
