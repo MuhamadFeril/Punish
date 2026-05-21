@@ -29,6 +29,8 @@ Route::middleware('guest')->group(function () {
     Route::get('register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('register', [AuthController::class, 'register']);
     Route::post('register/send-otp', [AuthController::class, 'sendOtp'])->name('register.send-otp');
+    Route::get('register/google', [AuthController::class, 'showGoogleRegister'])->name('register.google');
+    Route::post('register/google', [AuthController::class, 'registerGoogle']);
     Route::get('auth/google', [AuthController::class, 'googleLogin'])->name('google.login');
     Route::get('auth/google/callback', [AuthController::class, 'googleCallback'])->name('google.callback');
 });
@@ -56,6 +58,104 @@ Route::middleware(['auth', 'otp.verified'])->group(function () {
     Route::get('departemen', [DepartemenController::class, 'index'])->name('departemen.index.web');
     Route::get('jenis-pelanggaran', [JenisPelanggaranController::class, 'index'])->name('jenis-pelanggaran.index.web');
     Route::get('sanksi', [SanksiController::class, 'index'])->name('sanksi.index.web');
+
+    // ===== VUE MOBILE LAYOUT BACKEND ENDPOINTS =====
+    Route::get('mobile', function () {
+        return view('mobile');
+    })->name('mobile.vue');
+
+    Route::get('mobile/data', function () {
+        $violations = \App\Models\Pelanggaran::with(['karyawan.departemen', 'jenisPelanggaran', 'sanksi'])
+            ->latest()
+            ->get()
+            ->map(function ($v) {
+                return [
+                    'id' => $v->id,
+                    'karyawan' => $v->karyawan?->nama_karyawan ?? 'Unknown',
+                    'departemen' => $v->karyawan?->departemen?->nama_departemen ?? 'General',
+                    'category' => $v->jenisPelanggaran?->nama_pelanggaran ?? 'Umum',
+                    'reason' => $v->keterangan_pelanggaran,
+                    'date' => $v->tanggal_pelanggaran ? \Carbon\Carbon::parse($v->tanggal_pelanggaran)->translatedFormat('d M Y') : 'Unknown',
+                    'status' => strtoupper($v->status ?? 'pending'),
+                ];
+            });
+
+        $employees = \App\Models\Karyawan::with('departemen')->get()->map(function ($e) {
+            return [
+                'id' => $e->id,
+                'name' => $e->nama_karyawan,
+                'dept' => $e->departemen?->nama_departemen ?? 'General',
+            ];
+        });
+
+        $jenisPelanggaran = \App\Models\Jenispelanggaran::all()->map(function ($j) {
+            return [
+                'id' => $j->id,
+                'name' => $j->nama_pelanggaran,
+                'description' => $j->deskripsi_pelanggaran,
+            ];
+        });
+
+        $notifications = auth()->user()->notifications()->latest()->take(10)->get()->map(function ($n) {
+            return [
+                'title' => $n->data['title'] ?? 'Notifikasi Baru',
+                'message' => $n->data['message'] ?? ($n->data['keterangan'] ?? 'Ada pelanggaran baru dilaporkan'),
+                'time' => $n->created_at->diffForHumans(),
+            ];
+        });
+
+        return response()->json([
+            'violations' => $violations,
+            'employees' => $employees,
+            'jenis_pelanggaran' => $jenisPelanggaran,
+            'notifications' => $notifications,
+        ]);
+    });
+
+    Route::post('mobile/report', function (Illuminate\Http\Request $request) {
+        $validated = $request->validate([
+            'karyawan_id' => 'required|exists:karyawan,id',
+            'jenis_pelanggaran_id' => 'required|exists:jenis_pelanggaran,id',
+            'keterangan_pelanggaran' => 'required|string',
+        ]);
+
+        $validated['tanggal_pelanggaran'] = now()->toDateString();
+        $validated['reported_by'] = auth()->id();
+        $validated['status'] = 'pending';
+
+        $pelanggaran = \App\Models\Pelanggaran::create($validated);
+        $pelanggaran->load('karyawan.departemen', 'jenisPelanggaran', 'reportedBy');
+
+        // Send notifications using existing logic
+        $recipients = \App\Models\User::where('role', 'admin')->get()->keyBy('id');
+        $recipients[auth()->id()] = auth()->user();
+
+        if ($pelanggaran->karyawan?->email_karyawan) {
+            $violatorUser = \App\Models\User::where('email', $pelanggaran->karyawan->email_karyawan)->first();
+            if ($violatorUser) {
+                $recipients[$violatorUser->id] = $violatorUser;
+            }
+        }
+
+        try {
+            \Illuminate\Support\Facades\Notification::send($recipients->values(), new \App\Notifications\PelanggaranNotification($pelanggaran));
+        } catch (\Exception $e) {
+            // Ignore notification errors in local env
+        }
+
+        return response()->json([
+            'success' => true,
+            'violation' => [
+                'id' => $pelanggaran->id,
+                'karyawan' => $pelanggaran->karyawan?->nama_karyawan ?? 'Unknown',
+                'departemen' => $pelanggaran->karyawan?->departemen?->nama_departemen ?? 'General',
+                'category' => $pelanggaran->jenisPelanggaran?->nama_pelanggaran ?? 'Umum',
+                'reason' => $pelanggaran->keterangan_pelanggaran,
+                'date' => \Carbon\Carbon::parse($pelanggaran->tanggal_pelanggaran)->translatedFormat('d M Y'),
+                'status' => strtoupper($pelanggaran->status ?? 'pending'),
+            ]
+        ]);
+    });
 
     // ===== ADMIN ONLY ROUTES =====
     Route::middleware('role:admin')->group(function () {

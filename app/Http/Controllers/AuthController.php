@@ -385,6 +385,33 @@ class AuthController extends Controller
 
         return back()->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
     }
+    /**
+     * Kirim ulang OTP register.
+     */
+    public function resendOtpRegister(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ]);
+
+        $email = $request->email;
+        $throttleKey = 'otp-resend-register:' . $email;
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 1)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            return back()->with('error', "Tunggu {$seconds} detik sebelum meminta kode baru.");
+        }
+
+        RateLimiter::hit($throttleKey, self::RESEND_COOLDOWN);
+
+        try {
+            $this->generateAndSendOtpRegister($email);
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal mengirim ulang OTP. Silakan coba lagi.');
+        }
+
+        return back()->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
+    }
 
     // =========================================================================
     //  GOOGLE OAUTH
@@ -400,44 +427,27 @@ class AuthController extends Controller
 
     /**
      * Handle callback dari Google OAuth.
-     *
-     * FIX: Inject Request secara eksplisit — sebelumnya pakai request() global
-     *      yang inkonsisten dan tidak testable.
      */
     public function googleCallback(Request $request)
     {
         try {
-            // BUG 4 FIX: Hapus ->stateless() karena googleLogin() menggunakan ->redirect()
-            // yang stateful (menyimpan OAuth state untuk CSRF protection).
-            // Memakai ->stateless()->user() setelah stateful redirect akan menyebabkan
-            // "state mismatch" error karena state parameter tidak diverifikasi.
             $googleUser = Socialite::driver('google')->user();
             $email      = strtolower(trim($googleUser->getEmail()));
 
             $user = User::where('email', $email)->first();
 
             if (!$user) {
-                $departemen = Departemen::first();
-
-                $user = User::create([
-                    'name'      => $googleUser->getName(),
-                    'email'     => $email,
-                    'google_id' => $googleUser->getId(),
-                    'avatar'    => $googleUser->getAvatar(),
-                    // FIX: 32 karakter lebih aman dari 16
-                    'password'  => Hash::make(Str::random(32)),
-                    'role'      => 'user',
+                // Simpan data Google ke session dan arahkan ke form pendaftaran khusus Google
+                session([
+                    'google_register_info' => [
+                        'name'      => $googleUser->getName(),
+                        'email'     => $email,
+                        'google_id' => $googleUser->getId(),
+                        'avatar'    => $googleUser->getAvatar(),
+                    ]
                 ]);
 
-                Karyawan::create([
-                    'nama_karyawan'    => $googleUser->getName(),
-                    'email_karyawan'   => $email,
-                    'alamat_karyawan'  => '-',
-                    'departemen_id'    => $departemen?->id ?? 1,
-                    'jabatan_karyawan' => 'Staf',
-                    'status'           => 'aktif',
-                ]);
-
+                return redirect()->route('register.google');
             } elseif (!$user->google_id) {
                 $user->update([
                     'google_id' => $googleUser->getId(),
@@ -446,7 +456,6 @@ class AuthController extends Controller
             }
 
             Auth::login($user, true);
-            // FIX: Gunakan $request yang diinjeksi, bukan request() global
             $request->session()->regenerate();
 
             $user->forceFill(['otp_verified_at' => now()])->save();
@@ -457,6 +466,72 @@ class AuthController extends Controller
             return redirect()->route('login')
                 ->with('error', 'Login dengan Google gagal. Silakan coba lagi.');
         }
+    }
+
+    /**
+     * Tampilkan form registrasi lanjutan (Google).
+     */
+    public function showGoogleRegister()
+    {
+        if (!session()->has('google_register_info')) {
+            return redirect()->route('login')->with('error', 'Silakan login dengan Google terlebih dahulu.');
+        }
+
+        $departemens = Departemen::all();
+        $googleInfo = session('google_register_info');
+
+        return view('auth.register_google', compact('departemens', 'googleInfo'));
+    }
+
+    /**
+     * Proses pendaftaran lanjutan (Google).
+     */
+    public function registerGoogle(Request $request)
+    {
+        if (!session()->has('google_register_info')) {
+            return redirect()->route('login')->with('error', 'Sesi kedaluwarsa. Silakan login kembali.');
+        }
+
+        $googleInfo = session('google_register_info');
+        $email = $googleInfo['email'];
+
+        $validated = $request->validate([
+            'departemen_id' => ['required', 'exists:departemens,id'],
+            'captcha'       => ['required', $this->captchaRule()],
+            'otp'           => ['required', $this->registerOtpRule($email)],
+        ]);
+
+        Otp::where('email', $email)->where('type', 'register')->delete();
+
+        $user = DB::transaction(function () use ($validated, $googleInfo) {
+            $user = User::create([
+                'name'      => $googleInfo['name'],
+                'email'     => $googleInfo['email'],
+                'password'  => Hash::make(Str::random(32)),
+                'role'      => 'user',
+                'google_id' => $googleInfo['google_id'],
+                'avatar'    => $googleInfo['avatar'],
+            ]);
+
+            Karyawan::create([
+                'nama_karyawan'    => $googleInfo['name'],
+                'email_karyawan'   => $googleInfo['email'],
+                'alamat_karyawan'  => '-',
+                'departemen_id'    => $validated['departemen_id'],
+                'jabatan_karyawan' => 'Staf',
+                'status'           => 'aktif',
+            ]);
+
+            return $user;
+        });
+
+        session()->forget('google_register_info');
+
+        Auth::login($user);
+        $request->session()->regenerate();
+        $user->forceFill(['otp_verified_at' => now()])->save();
+
+        return redirect()->route('dashboard')->with('success', 'Registrasi dengan Google berhasil!');
     }
 
     // =========================================================================
