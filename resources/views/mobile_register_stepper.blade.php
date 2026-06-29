@@ -80,9 +80,9 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: #fff;
-        border: 2px solid #6c757d;
-        color: #6c757d;
+        background: #1e293b;
+        border: 2px solid #475569;
+        color: #94a3b8;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -90,16 +90,16 @@
         font-weight: bold;
     }
     .stepper .step.active .circle {
-        background: #3d2c23;
-        color: #fff;
-        border-color: #3d2c23;
+        background: #f8fafc;
+        color: #0f172a;
+        border-color: #f8fafc;
     }
     .stepper .step .label {
         font-size: 0.8rem;
-        color: #6c757d;
+        color: #94a3b8;
     }
     .stepper .step.active .label {
-        color: #3d2c23;
+        color: #f8fafc;
         font-weight: bold;
     }
 </style>

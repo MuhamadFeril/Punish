@@ -1,370 +1,62 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
-<style>
-    .login-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        position: relative;
-        overflow: hidden;
-        animation: gradientShift 8s ease infinite;
-    }
-    
-    @keyframes gradientShift {
-        0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        50% { background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); }
-        100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    }
-    
-    .login-container::before {
-        content: '';
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
-        top: -150px;
-        left: -150px;
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    .login-container::after {
-        content: '';
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 50%;
-        bottom: -100px;
-        right: -100px;
-        animation: float 8s ease-in-out infinite reverse;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(30px); }
-    }
-    
-    .login-form {
-        background: white;
-        border-radius: 16px;
-        padding: 40px;
-        width: 100%;
-        max-width: 420px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        animation: slideInUp 0.6s ease-out;
-        position: relative;
-        z-index: 1;
-    }
-    
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .form-group {
-        margin-bottom: 24px;
-        animation: fadeInLeft 0.5s ease-out backwards;
-    }
-    
-    .form-group:nth-child(1) { animation-delay: 0.2s; }
-    .form-group:nth-child(2) { animation-delay: 0.4s; }
-    .form-group:nth-child(3) { animation-delay: 0.6s; }
-    
-    @keyframes fadeInLeft {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-    
-    .form-label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 8px;
-        transition: color 0.3s ease;
-    }
-    
-    .form-input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: inherit;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: #f9fafb;
-    }
-    
-    .form-input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-        background: white;
-    }
-    
-    .form-error {
-        color: #dc2626;
-        font-size: 13px;
-        margin-top: 6px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        animation: shake 0.3s ease;
-    }
-    
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-    }
-    
-    .submit-btn {
-        width: 100%;
-        padding: 12px 16px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-top: 12px;
-    }
-    
-    .submit-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-    }
-    
-    .submit-btn:active {
-        transform: translateY(0);
-    }
-    
-    .login-footer {
-        margin-top: 24px;
-        text-align: center;
-        font-size: 14px;
-        color: #6b7280;
-        animation: fadeIn 0.6s ease-out 0.8s backwards;
-    }
-    
-    .login-footer a {
-        color: #667eea;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .login-footer a::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        transition: width 0.3s ease;
-    }
-    
-    .login-footer a:hover::after {
-        width: 100%;
-    }
-    
-    .login-header {
-        text-align: center;
-        margin-bottom: 32px;
-        animation: fadeIn 0.6s ease-out 0.2s backwards;
-    }
-    
-    .login-title {
-        font-size: 28px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 8px;
-    }
-    
-    .login-subtitle {
-        font-size: 14px;
-        color: #6b7280;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        margin: 24px 0;
-        gap: 12px;
-    }
-
-    .divider-line {
-        flex: 1;
-        height: 1px;
-        background: #e5e7eb;
-    }
-
-    .divider-text {
-        font-size: 12px;
-        color: #9ca3af;
-        font-weight: 500;
-    }
-
-    .social-login {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
-        background: white;
-        color: #374151;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        text-decoration: none;
-    }
-
-    .social-login:hover {
-        border-color: #d1d5db;
-        background: #f9fafb;
-        transform: translateY(-1px);
-    }
-
-    .social-login:active {
-        transform: translateY(0);
-    }
-
-    .google-btn {
-        border-color: #4f46e5;
-        background: linear-gradient(135deg, #4f46e5 0%, #667eea 100%);
-        color: white;
-    }
-
-    .google-btn:hover {
-        border-color: #4338ca;
-        background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
-
-    .google-icon {
-        font-size: 18px;
-    }
-
-</style>
-
-<div class="login-container">
-    <div class="login-form">
-        <div class="login-header">
-            <h1 class="login-title">Selamat Datang</h1>
-            <p class="login-subtitle">Masuk ke Sistem Manajemen Pelanggaran</p>
+<div class="auth-shell min-h-[calc(100dvh-10rem)] flex items-center justify-center">
+    <section class="auth-card max-w-md p-5 sm:p-8">
+        <div class="mb-7 text-center">
+            <p class="text-sm font-semibold text-indigo-600">Punish Sistem</p>
+            <h1 class="mt-2 text-2xl sm:text-3xl font-bold text-slate-950">Selamat Datang</h1>
+            <p class="mt-2 text-sm text-slate-500">Masuk ke Sistem Manajemen Pelanggaran</p>
         </div>
 
-        @if (session('error'))
-            <div class="alert alert-error mb-4">
-                ❌ {{ session('error') }}
-            </div>
-        @endif
-
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('login') }}" method="POST" class="space-y-5">
             @csrf
 
-            <div class="form-group">
-                <label for="email" class="form-label">📧 Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    class="form-input"
-                    value="{{ old('email') }}"
-                    placeholder="your@email.com"
-                    required
-                >
+            <div>
+                <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">Email</label>
+                <input type="email" id="email" name="email" class="form-control-modern" value="{{ old('email') }}" placeholder="your@email.com" autocomplete="email" required>
                 @error('email')
-                    <div class="form-error">✗ {{ $message }}</div>
+                    <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label for="password" class="form-label">🔐 Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    class="form-input"
-                    placeholder="••••••••"
-                    required
-                >
+            <div>
+                <label for="password" class="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+                <input type="password" id="password" name="password" class="form-control-modern" placeholder="Minimal 8 karakter" autocomplete="current-password" required>
                 @error('password')
-                    <div class="form-error">✗ {{ $message }}</div>
+                    <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label class="form-label">🤖 Verifikasi Captcha</label>
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                    <img src="{{ route('captcha.image') }}" alt="Captcha" id="captcha-img" style="border: 1px solid #e5e7eb; border-radius: 8px; height: 42px;">
-                    <button type="button" onclick="document.getElementById('captcha-img').src = '{{ route('captcha.refresh') }}?' + Math.random()" style="background: white; border: 1px solid #e5e7eb; padding: 0 12px; height: 42px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: #4b5563;">
-                        ↻ Refresh
+            <div>
+                <label for="captcha" class="mb-2 block text-sm font-semibold text-slate-700">Verifikasi Captcha</label>
+                <div class="mb-3 flex flex-col gap-3 min-[380px]:flex-row min-[380px]:items-center">
+                    <img src="{{ route('captcha.image') }}" alt="Captcha" id="captcha-img" class="h-12 w-full min-[380px]:w-52 rounded-lg border border-slate-200 bg-white object-cover">
+                    <button type="button" onclick="document.getElementById('captcha-img').src = '{{ route('captcha.refresh') }}?' + Math.random()" class="btn-secondary-modern px-4 text-sm">
+                        Refresh
                     </button>
                 </div>
-                <input 
-                    type="text" 
-                    id="captcha" 
-                    name="captcha" 
-                    class="form-input"
-                    placeholder="Ketik teks dari gambar di atas"
-                    required
-                    autocomplete="off"
-                >
+                <input type="text" id="captcha" name="captcha" class="form-control-modern" placeholder="Ketik teks dari gambar" required autocomplete="off">
                 @error('captcha')
-                    <div class="form-error">✗ {{ $message }}</div>
+                    <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                 @enderror
             </div>
 
-            <button type="submit" class="submit-btn">
-                🚀 Login
-            </button>
+            <button type="submit" class="btn-primary-modern w-full px-4 text-sm">Login</button>
         </form>
 
-        <div class="divider">
-            <div class="divider-line"></div>
-            <span class="divider-text">ATAU</span>
-            <div class="divider-line"></div>
+        <div class="my-6 flex items-center gap-3">
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <span class="text-xs font-semibold uppercase text-slate-400">Atau</span>
+            <div class="h-px flex-1 bg-slate-200"></div>
         </div>
 
-        <a href="{{ route('google.login') }}" class="social-login google-btn">
-            <span class="google-icon">🔵</span>
-            Masuk dengan Google
-        </a>
+        <a href="{{ route('google.login') }}" class="btn-secondary-modern w-full px-4 text-sm">Masuk dengan Google</a>
 
-        <div class="login-footer">
-            Belum punya akun? 
-            <a href="{{ route('register') }}">
-                Daftar di sini →
-            </a>
-        </div>
-    </div>
+        <p class="mt-7 text-center text-sm text-slate-500">
+            Belum punya akun?
+            <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-700">Daftar di sini</a>
+        </p>
+    </section>
 </div>
 @endsection

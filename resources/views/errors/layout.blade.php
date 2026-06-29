@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>@yield('title') - Punish System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -22,19 +22,29 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
+        html, body {
+            height: 100%;
+            height: 100dvh;
+        }
+
         body {
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%), 
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%),
                 radial-gradient(at 100% 0%, hsla(339,49%,30%,0.3) 0, transparent 50%);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-main);
             overflow: hidden;
             position: relative;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
 
         .blob {
@@ -46,16 +56,16 @@
         }
 
         .blob-1 {
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             background: rgba(79, 70, 229, 0.4);
             top: 10%;
             left: 20%;
         }
 
         .blob-2 {
-            width: 400px;
-            height: 400px;
+            width: 250px;
+            height: 250px;
             background: rgba(236, 72, 153, 0.3);
             bottom: 10%;
             right: 15%;
@@ -70,10 +80,10 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 40px 60px;
+            padding: 32px 24px;
             text-align: center;
-            max-width: 600px;
-            width: 90%;
+            max-width: 520px;
+            width: calc(90% - env(safe-area-inset-left) - env(safe-area-inset-right));
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
@@ -81,7 +91,7 @@
         }
 
         .error-code {
-            font-size: 120px;
+            font-size: clamp(64px, 15vw, 120px);
             font-weight: 800;
             line-height: 1;
             background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
@@ -96,14 +106,14 @@
         }
 
         .error-title {
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 28px);
             font-weight: 700;
             margin-bottom: 16px;
             color: #f1f5f9;
         }
 
         .error-message {
-            font-size: 16px;
+            font-size: clamp(14px, 3.5vw, 16px);
             color: var(--text-muted);
             margin-bottom: 32px;
             line-height: 1.6;
@@ -120,7 +130,7 @@
             text-decoration: none;
             border-radius: 9999px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: clamp(13px, 3.5vw, 15px);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255,255,255,0.1);
             position: relative;
@@ -172,9 +182,12 @@
         }
 
         @media (max-width: 640px) {
-            .error-code { font-size: 80px; }
-            .error-title { font-size: 24px; }
-            .error-container { padding: 32px 24px; }
+            .blob-1 { width: 140px; height: 140px; }
+            .blob-2 { width: 180px; height: 180px; }
+            .error-container {
+                padding: 28px 20px;
+                border-radius: 20px;
+            }
         }
     </style>
 </head>
@@ -186,7 +199,7 @@
         <div class="error-code">@yield('code')</div>
         <h1 class="error-title">@yield('heading')</h1>
         <p class="error-message">@yield('message')</p>
-        
+
         <a href="{{ url('/') }}" class="btn-home">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />

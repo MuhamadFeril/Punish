@@ -24,7 +24,6 @@ Route::post('google', [AuthController::class, 'google']);
 Route::get('captcha', [CaptchaController::class, 'generateCaptcha']);
 Route::post('captcha/validate', [CaptchaController::class, 'validateCaptcha']);
 
-// Protected routes (require auth)
 Route::middleware(['auth:sanctum', 'otp.verified'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('otp/verify', [AuthController::class, 'verifyOtp']);
