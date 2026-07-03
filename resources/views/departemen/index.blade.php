@@ -191,6 +191,7 @@
                         </td>
                         <td>
                             <div class="action-buttons">
+                                <a href="{{ route('departemen.show.web', $item->id) }}" class="btn" style="background-color: #dbeafe; color: #1e40af;">👁️ Detail</a>
                                 @if(auth()->user()->role === 'admin')
                                     <a href="{{ route('departemen.edit.web', $item->id) }}" class="btn btn-edit">✏️ Edit</a>
                                     <form action="{{ route('departemen.destroy.web', $item->id) }}" method="POST" style="display:inline;">

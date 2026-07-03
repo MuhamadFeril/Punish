@@ -85,19 +85,20 @@ body {
   background: #fafafa;
 }
 
-.info-row {
-  display: flex;
-  margin-bottom: 3mm;
+.info-table {
+  width: 100%;
   font-size: 11px;
+  border-collapse: collapse;
+}
+
+.info-table td {
+  padding-bottom: 3mm;
+  vertical-align: top;
 }
 
 .info-label {
   width: 35mm;
   font-weight: bold;
-}
-
-.info-value {
-  flex: 1;
 }
 
 .violation-box {
@@ -142,35 +143,29 @@ body {
   font-size: 11px;
 }
 
-.signatures {
-  display: flex;
-  justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 15mm;
-    gap: 10mm;
-  }
+.signatures-table {
+  width: 100%;
+  margin-top: 15mm;
+}
 
-  .sig-block {
-    width: 48%;
-    text-align: center;
-    font-size: 11px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 50mm;
-  }
+.sig-block {
+  width: 48%;
+  text-align: center;
+  font-size: 11px;
+  vertical-align: bottom;
+}
 
-  .sig-title {
-    font-weight: bold;
-    margin-bottom: 6mm;
-  }
+.sig-title {
+  font-weight: bold;
+  margin-bottom: 25mm;
+}
 
-  .sig-line {
-    border-top: 1px solid #000;
-    margin: 0 auto 3mm;
-    width: 90%;
-    height: 0;
-  }
+.sig-line {
+  border-top: 1px solid #000;
+  margin: 0 auto 3mm;
+  width: 90%;
+  height: 0;
+}
   </style>
 </head>
 <body>
@@ -197,38 +192,42 @@ body {
 
   <div class="info-box">
     <div class="section-title">DATA KARYAWAN</div>
-    <div class="info-row">
-      <div class="info-label">Nama</div>
-      <div class="info-value">: {{ $pelanggaran->karyawan->nama_karyawan ?? '-' }}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Jabatan</div>
-      <div class="info-value">: {{ $pelanggaran->karyawan->jabatan_karyawan ?? '-' }}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Departemen</div>
-      <div class="info-value">: {{ $pelanggaran->karyawan->departemen->nama_departemen ?? '-' }}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Status</div>
-      <div class="info-value">: {{ ucfirst($pelanggaran->karyawan->status ?? '-') }}</div>
-    </div>
+    <table class="info-table">
+      <tr>
+        <td class="info-label">Nama</td>
+        <td class="info-value">: {{ $pelanggaran->karyawan->nama_karyawan ?? '-' }}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Jabatan</td>
+        <td class="info-value">: {{ $pelanggaran->karyawan->jabatan_karyawan ?? '-' }}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Departemen</td>
+        <td class="info-value">: {{ $pelanggaran->karyawan->departemen->nama_departemen ?? '-' }}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Status</td>
+        <td class="info-value">: {{ ucfirst($pelanggaran->karyawan->status ?? '-') }}</td>
+      </tr>
+    </table>
   </div>
 
   <div class="violation-box">
     <div class="section-title">PELANGGARAN</div>
-    <div class="info-row">
-      <div class="info-label">Jenis</div>
-      <div class="info-value">: <strong>{{ $pelanggaran->jenisPelanggaran->nama_pelanggaran ?? '-' }}</strong></div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Tingkat</div>
-      <div class="info-value">: <strong style="text-transform: uppercase;">{{ $pelanggaran->jenisPelanggaran->tingkat_pelanggaran ?? '-' }}</strong></div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Tanggal</div>
-      <div class="info-value">: {{ \Carbon\Carbon::parse($pelanggaran->tanggal_pelanggaran ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</div>
-    </div>
+    <table class="info-table">
+      <tr>
+        <td class="info-label">Jenis</td>
+        <td class="info-value">: <strong>{{ $pelanggaran->jenisPelanggaran->nama_pelanggaran ?? '-' }}</strong></td>
+      </tr>
+      <tr>
+        <td class="info-label">Tingkat</td>
+        <td class="info-value">: <strong style="text-transform: uppercase;">{{ $pelanggaran->jenisPelanggaran->tingkat_pelanggaran ?? '-' }}</strong></td>
+      </tr>
+      <tr>
+        <td class="info-label">Tanggal</td>
+        <td class="info-value">: {{ \Carbon\Carbon::parse($pelanggaran->tanggal_pelanggaran ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</td>
+      </tr>
+    </table>
     <div style="margin-top: 5mm; padding-top: 5mm; border-top: 1px solid #c0392b;">
       <strong>Keterangan:</strong><br>
       {{ $pelanggaran->keterangan_pelanggaran ?? 'Tidak ada keterangan' }}
@@ -237,18 +236,20 @@ body {
 
   <div class="sanction-box">
     <div class="section-title">SANKSI YANG DIBERIKAN</div>
-    <div class="info-row">
-      <div class="info-label">Jenis Sanksi</div>
-      <div class="info-value">: <strong>{{ $sanksi->jenis_sanksi ?? '-' }}</strong></div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Tanggal Berlaku</div>
-      <div class="info-value">: {{ \Carbon\Carbon::parse($sanksi->tanggal_sanksi ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</div>
-    </div>
-    <div class="info-row">
-      <div class="info-label">Status</div>
-      <div class="info-value">: <strong>{{ ucfirst($sanksi->status ?? '-') }}</strong></div>
-    </div>
+    <table class="info-table">
+      <tr>
+        <td class="info-label">Jenis Sanksi</td>
+        <td class="info-value">: <strong>{{ $sanksi->jenis_sanksi ?? '-' }}</strong></td>
+      </tr>
+      <tr>
+        <td class="info-label">Tanggal Berlaku</td>
+        <td class="info-value">: {{ \Carbon\Carbon::parse($sanksi->tanggal_sanksi ?? now())->locale('id')->isoFormat('D MMMM YYYY') }}</td>
+      </tr>
+      <tr>
+        <td class="info-label">Status</td>
+        <td class="info-value">: <strong>{{ ucfirst($sanksi->status ?? '-') }}</strong></td>
+      </tr>
+    </table>
     @if($sanksi->keterangan_sanksi)
     <div style="margin-top: 5mm; padding-top: 5mm; border-top: 1px solid #f39c12;">
       <strong>Catatan:</strong><br>
@@ -266,19 +267,21 @@ body {
       Jakarta, {{ now()->isoFormat('D MMMM YYYY') }}
     </div>
 
-    <div class="signatures">
-      <div class="sig-block">
-        <div class="sig-title">HRD </div>
-        <div class="sig-line"></div>
-        <div class="sig-name">_______________________</div>
-      </div>
-
-      <div class="sig-block">
-        <div class="sig-title">Karyawan</div>
-        <div class="sig-line"></div>
-        <div class="sig-name">{{ $pelanggaran->karyawan->nama_karyawan ?? '_______________________' }}</div>
-      </div>
-    </div>
+    <table class="signatures-table">
+      <tr>
+        <td class="sig-block">
+          <div class="sig-title">HRD</div>
+          <div class="sig-line"></div>
+          <div class="sig-name">_______________________</div>
+        </td>
+        <td style="width: 4%;"></td>
+        <td class="sig-block">
+          <div class="sig-title">Karyawan</div>
+          <div class="sig-line"></div>
+          <div class="sig-name">{{ $pelanggaran->karyawan->nama_karyawan ?? '_______________________' }}</div>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <div class="note">

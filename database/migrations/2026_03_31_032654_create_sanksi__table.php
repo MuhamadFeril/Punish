@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sanksi', function (Blueprint $table) {
-            $table->id();
-            $table->ForeignId('pelanggaran_id')->constrained('pelanggaran')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('pelanggaran_id')->constrained('pelanggaran')->onDelete('cascade');
             $table->enum('jenis_sanksi', ['peringatan','SP1','SP2', 'denda', 'skorsing', 'pemecatan']);
             $table->date('tanggal_sanksi');
             $table->text('keterangan_sanksi')->nullable();

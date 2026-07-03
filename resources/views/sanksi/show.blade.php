@@ -55,6 +55,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 24px;
+        align-items: stretch;
     }
     
     .info-card {
@@ -64,6 +65,9 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         border: 1px solid #e5e7eb;
         animation: fadeIn 0.5s ease-out backwards;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
     
     @keyframes fadeIn {
@@ -165,7 +169,6 @@
         font-weight: 500;
         display: inline-block;
         transition: all 0.3s ease;
-        margin-top: 16px;
     }
     
     .action-btn:hover {
@@ -233,7 +236,7 @@
             <div class="info-label">Tanggal Pelanggaran</div>
             <div class="info-value">{{ \Carbon\Carbon::parse($sanksi->pelanggaran->tanggal_pelanggaran)->format('d-m-Y') }}</div>
         </div>
-        <div class="info-item">
+        <div class="info-item" style="margin-top: auto;">
             <a href="{{ route('pelanggaran.show.web', $sanksi->pelanggaran->id) }}" class="action-btn">
                 📄 Lihat Laporan Pelanggaran Lengkap
             </a>

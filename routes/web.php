@@ -10,6 +10,7 @@ use App\Http\Controllers\JenisPelanggaranController;
 use App\Http\Controllers\PelanggaranController;
 use App\Http\Controllers\SanksiController;
 use App\Http\Controllers\CaptchaController;
+use Illuminate\Support\Facades\Storage;
 
 // Home
 Route::get('/', function () {

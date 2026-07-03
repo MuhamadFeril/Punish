@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('otps', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->change();
+            $table->uuid('user_id')->nullable()->change();
             $table->string('email')->nullable()->after('user_id');
             $table->string('type')->default('login')->after('email');
             $table->string('otp', 255)->change();

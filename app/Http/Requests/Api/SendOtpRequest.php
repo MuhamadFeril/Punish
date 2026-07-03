@@ -16,7 +16,7 @@ class SendOtpRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'captcha' => ['required', new CapctchaRule()],
+            'captcha' => ['required', new CaptchaRule()],
         ];
     }
 }
